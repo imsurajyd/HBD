@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import CountdownScreen from "./components/CountdownScreen";
 import BirthdayHero from "./components/BirthdayHero";
@@ -175,7 +175,7 @@ function App() {
           toggleMute();
         }}
         aria-label="Toggle Sound"
-        className="fixed bottom-5 right-5 z-[999] flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-rose-200/80 bg-white/85 text-xl shadow-[0_8px_20px_rgba(244,114,182,0.25)] backdrop-blur-md transition-transform duration-300 hover:scale-110 active:scale-95"
+        className="fixed bottom-5 right-5 z-999 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-rose-200/80 bg-white/85 text-xl shadow-[0_8px_20px_rgba(244,114,182,0.25)] backdrop-blur-md transition-transform duration-300 hover:scale-110 active:scale-95"
       >
         {isMuted ? "🔇" : "🎵"}
       </button>
