@@ -143,3 +143,307 @@ body {
 .animate-letter-open {
   animation: letterOpen 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
+.firework {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  animation: firework 1.4s ease-out forwards;
+}
+
+.firework span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 35px;
+  border-radius: 999px;
+  background: #fff;
+  transform-origin: 50% 0;
+  box-shadow:
+    0 0 8px #fff,
+    0 0 16px #ff8fb1,
+    0 0 25px #ff4f81;
+}
+
+@keyframes firework {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+/* =====================================================
+   BIRTHDAY CORNER FIREWORKS
+===================================================== */
+
+.birthday-fireworks {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Firework launcher */
+
+.firework-launcher {
+  position: absolute;
+  bottom: -25px;
+  width: 10px;
+  height: 10px;
+}
+
+/* LEFT SIDE */
+
+.firework-left {
+  left: 7%;
+  animation: fireworkLeft 3.5s infinite;
+}
+
+/* RIGHT SIDE */
+
+.firework-right {
+  right: 7%;
+  animation: fireworkRight 4s infinite;
+}
+
+/* Rocket/trail */
+
+.firework-launcher::before {
+  content: "✨";
+  position: absolute;
+  left: -6px;
+  bottom: 0;
+  font-size: 22px;
+  animation: rocketTrail 1.2s ease-out forwards;
+}
+
+/* Explosion */
+
+.firework-burst {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  animation: burstAppear 3.5s infinite;
+}
+
+/* Individual rays */
+
+.firework-burst span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  width: 4px;
+  height: 34px;
+
+  border-radius: 999px;
+
+  background: #ff5c8a;
+
+  transform-origin: 50% 0;
+
+  transform: rotate(var(--angle)) translateY(-5px) scaleY(0);
+
+  box-shadow:
+    0 0 5px #ff5c8a,
+    0 0 10px #ff9fba,
+    0 0 18px #ffd1df;
+
+  animation: fireworkRay 900ms ease-out infinite;
+}
+
+/* Different timing for each side */
+
+.firework-right .firework-burst {
+  animation-delay: 1.2s;
+}
+
+.firework-right .firework-burst span {
+  animation-delay: 1.2s;
+}
+
+/* =====================================================
+   LEFT ROCKET
+===================================================== */
+
+@keyframes fireworkLeft {
+  0% {
+    transform: translateY(80px);
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  38% {
+    transform: translateY(-300px);
+    opacity: 1;
+  }
+
+  45% {
+    transform: translateY(-300px);
+    opacity: 1;
+  }
+
+  65% {
+    transform: translateY(-300px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(80px);
+    opacity: 0;
+  }
+}
+
+/* =====================================================
+   RIGHT ROCKET
+===================================================== */
+
+@keyframes fireworkRight {
+  0% {
+    transform: translateY(120px);
+    opacity: 0;
+  }
+
+  18% {
+    opacity: 1;
+  }
+
+  42% {
+    transform: translateY(-340px);
+    opacity: 1;
+  }
+
+  49% {
+    transform: translateY(-340px);
+    opacity: 1;
+  }
+
+  70% {
+    transform: translateY(-340px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(120px);
+    opacity: 0;
+  }
+}
+
+/* =====================================================
+   EXPLOSION
+===================================================== */
+
+@keyframes burstAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  38% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  43% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  52% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+
+  68% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+/* =====================================================
+   FIREWORK RAYS
+===================================================== */
+
+@keyframes fireworkRay {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--angle)) translateY(-5px) scaleY(0);
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  55% {
+    opacity: 1;
+    transform: rotate(var(--angle)) translateY(-5px) scaleY(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotate(var(--angle)) translateY(-5px) scaleY(1.25);
+  }
+}
+
+/* =====================================================
+   ROCKET TRAIL
+===================================================== */
+
+@keyframes rocketTrail {
+  0% {
+    opacity: 0;
+    transform: translateY(80px) scale(0.5);
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-300px) scale(1);
+  }
+}
+
+/* Mobile adjustment */
+
+@media (max-width: 640px) {
+  .firework-left {
+    left: 4%;
+  }
+
+  .firework-right {
+    right: 4%;
+  }
+
+  .firework-burst span {
+    width: 3px;
+    height: 28px;
+  }
+}
