@@ -1,40 +1,74 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { memories } from "../data/memories";
 import MemoryCard from "./MemoryCard";
 
 function MemoriesSection() {
   const [deck, setDeck] = useState(memories);
+  const [peeledStack, setPeeledStack] = useState([]);
   const [removingId, setRemovingId] = useState(null);
 
   const totalPhotos = memories.length;
   const currentPhotoNum = totalPhotos - deck.length + 1;
 
+  // 1. Next Photo Peel Logic
   const handlePhotoTap = (id) => {
     if (removingId !== null || deck.length === 0) return;
     setRemovingId(id);
 
+    const cardToPeel = deck.find((item) => item.id === id);
+
     setTimeout(() => {
       setDeck((prev) => prev.filter((item) => item.id !== id));
+      if (cardToPeel) {
+        setPeeledStack((prev) => [...prev, cardToPeel]);
+      }
       setRemovingId(null);
-    }, 450);
+    }, 400);
   };
 
+  // 2. Previous Photo Undo / Restore Logic
+  const handlePreviousPhoto = () => {
+    if (peeledStack.length === 0) return;
+
+    const lastPeeled = peeledStack[peeledStack.length - 1];
+    setPeeledStack((prev) => prev.slice(0, -1));
+    setDeck((prev) => [...prev, lastPeeled]);
+  };
+
+  // 3. Reset Deck Logic
   const handleReset = () => {
     setDeck(memories);
+    setPeeledStack([]);
     setRemovingId(null);
   };
 
-  // Performance stack: Keep top 4 photos rendered
+  // 4. Mobile Back Gesture Sync
+  useEffect(() => {
+    const handlePopState = (e) => {
+      if (peeledStack.length > 0 && deck.length > 0) {
+        e.preventDefault();
+        handlePreviousPhoto();
+        window.history.pushState({ stage: "memories" }, "");
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [peeledStack, deck.length]);
+
   const visibleCards = deck.slice(-4);
 
+  // Button tabhi active hoga jab deck me photo ho AUR kam se kam ek photo peel hui ho
+  const showPrevButton = deck.length > 0 && peeledStack.length > 0;
+
   return (
-    <section className="relative flex min-h-screen w-full flex-col items-center justify-between overflow-hidden bg-gradient-to-b from-[#fff5f7] via-[#ffecf2] to-[#ffe4ec] px-4 py-8 text-[#4a2835] select-none">
-      {/* 🌸 Ambient Atmosphere Orbs (Matched with App & Hero) */}
+    <section className="relative flex min-h-screen w-full flex-col items-center justify-between overflow-hidden bg-gradient-to-b from-[#fff5f7] via-[#ffecf2] to-[#ffe4ec] px-4 py-6 text-[#4a2835] select-none sm:py-8">
+      {/* 🌸 Ambient Atmosphere Orbs */}
       <div className="pointer-events-none absolute -left-20 -top-20 h-80 w-80 rounded-full bg-rose-200/40 blur-3xl animate-pulse" />
       <div className="pointer-events-none absolute -bottom-20 -right-20 h-96 w-96 rounded-full bg-pink-200/40 blur-3xl animate-pulse" />
 
-      {/* Floating Aesthetic Stickers */}
-      <div className="pointer-events-none absolute left-[8%] top-[12%] -rotate-12 text-3xl opacity-50 transition-transform duration-700 hover:rotate-12">
+      {/* Floating Stickers */}
+      <div className="pointer-events-none absolute left-[8%] top-[12%] -rotate-12 text-3xl opacity-50">
         🎞️
       </div>
       <div className="pointer-events-none absolute right-[10%] top-[15%] rotate-12 text-2xl opacity-60">
@@ -49,15 +83,12 @@ function MemoriesSection() {
 
       {/* 🏷️ Header Section */}
       <div className="relative z-10 flex flex-col items-center text-center">
-        {/* Vintage Stamp Badge */}
-        <div className="inline-flex items-center gap-1.5 rounded-[2px] bg-[#fce7ee]/80 px-3 py-0.5 shadow-xs -rotate-2">
-          <span className="text-xs">✨</span>
-          <p
-            style={{ fontFamily: "'Caveat', cursive" }}
-            className="text-base font-semibold text-[#8d4255]"
-          >
-            pieces of us
+        <div className="flex items-center gap-3 select-none">
+          <span className="h-px w-6 bg-[#df6f8d]/60 sm:w-10" />
+          <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#a76576] sm:text-[11px]">
+            Chapter 18 • Our Moments
           </p>
+          <span className="h-px w-6 bg-[#df6f8d]/60 sm:w-10" />
         </div>
 
         <h2 className="font-display mt-2 text-4xl font-bold tracking-tight text-[#4a2835] sm:text-6xl">
@@ -68,13 +99,13 @@ function MemoriesSection() {
           style={{ fontFamily: "'Caveat', cursive" }}
           className="mt-1 text-lg text-[#8d6972] sm:text-2xl"
         >
-          Tap the photo to peel it away and uncover the next moment...
+          Tap the photo to peel • Tap button below to go back
         </p>
       </div>
 
-      {/* 📸 The Physical Photo Deck Area */}
+      {/* 📸 The Physical Photo Deck Area (Exact Same Dimensions & Fixed Center Position) */}
       <div className="relative my-auto flex h-[410px] w-full max-w-sm items-center justify-center sm:h-[460px]">
-        {/* Soft Desk shadow under the photo stack */}
+        {/* Soft shadow below the deck */}
         <div className="pointer-events-none absolute h-64 w-72 rounded-3xl bg-[#d49aa9]/25 blur-2xl" />
 
         {deck.length > 0 ? (
@@ -115,10 +146,31 @@ function MemoriesSection() {
               onClick={handleReset}
               className="mt-6 flex cursor-pointer items-center gap-2 rounded-full bg-[#9e1c28] px-7 py-3 text-xs font-bold uppercase tracking-widest text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#80141f] active:scale-95"
             >
-              <span>🔄 Flip Deck Again</span>
+              <span>🔄 View Again</span>
             </button>
           </div>
         )}
+      </div>
+
+      {/* 📊 Bottom Controls: Counter + Zero-Shift Fixed Previous Button */}
+      <div className="relative z-20 flex flex-col items-center gap-2 pb-3">
+        {/* Fixed 40px Height Container: Button hide hone par bhi height zero nahi hogi, image apni jagah rahegi */}
+        <div className="flex h-10 items-center justify-center">
+          <button
+            type="button"
+            onClick={handlePreviousPhoto}
+            tabIndex={showPrevButton ? 0 : -1}
+            aria-hidden={!showPrevButton}
+            className={`flex cursor-pointer items-center gap-2 rounded-full border border-rose-300 bg-white px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#9e1c28] shadow-md transition-all duration-300 active:scale-95 ${
+              showPrevButton
+                ? "opacity-100 translate-y-0 pointer-events-auto hover:bg-rose-50 hover:shadow-lg"
+                : "opacity-0 translate-y-2 pointer-events-none"
+            }`}
+          >
+            <span>↩</span>
+            <span>Previous Photo</span>
+          </button>
+        </div>
       </div>
 
       <style>{`

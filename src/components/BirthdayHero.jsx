@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import confetti from "canvas-confetti";
 import Confetti from "./Confetti";
 import Balloons from "./Balloons";
@@ -93,7 +93,7 @@ function BirthdayHero({ onTeddyClick }) {
   }, []);
 
   return (
-    <section className="relative flex min-h-screen w-full flex-col items-center justify-between overflow-hidden bg-gradient-to-b from-[#fff5f7] via-[#ffecf2] to-[#ffe4ec] px-4 py-4 text-[#4a2835] select-none sm:py-6">
+    <section className="relative flex min-h-screen w-full flex-col items-center justify-between overflow-hidden bg-linear-to-b from-[#fff5f7] via-[#ffecf2] to-[#ffe4ec] px-4 py-4 text-[#4a2835] select-none sm:py-6">
       {/* 🌸 Ambient Atmosphere Orbs */}
       <div className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-rose-200/40 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-20 -right-20 h-80 w-80 rounded-full bg-pink-200/40 blur-3xl" />

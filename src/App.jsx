@@ -5,8 +5,13 @@ import BirthdayHero from "./components/BirthdayHero";
 import MessageSection from "./components/MessageSection";
 import MemoriesSection from "./components/MemoriesSection";
 
-// TESTING: 8 seconds (Aapke test ke mutabiq)
-const BIRTHDAY_DATE = new Date(Date.now() + 8 * 1000);
+// Audio Imports
+import COUNTDOWN_AUDIO_URL from "./assets/music/Countdown.mp3"; // 10s Ticking
+import BIRTHDAY_AUDIO_URL from "./assets/music/Birthday.mp3"; // Birthday Hero Song
+import FAVORITE_AUDIO_URL from "./assets/music/Favorite.mp3"; // GF's Favorite Song
+
+// TESTING: 14 seconds
+const BIRTHDAY_DATE = new Date(Date.now() + 14 * 1000);
 
 // FINAL:
 // const BIRTHDAY_DATE = new Date("2026-09-09T00:00:00");
@@ -37,35 +42,36 @@ function App() {
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
   const [stage, setStage] = useState("countdown");
   const [isMuted, setIsMuted] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
+  const [isLetterOpened, setIsLetterOpened] = useState(false);
 
-  // Dedicated Audio Refs
   const countdownAudioRef = useRef(null);
   const birthdayAudioRef = useRef(null);
+  const favoriteAudioRef = useRef(null);
 
-  // 1. Initialize Audios with Preload & Volume
+  // 1. Audio Setup & Unlock
   useEffect(() => {
-    const countAudio = new Audio("/countdown-sound.mp3");
-    countAudio.loop = true;
-    countAudio.volume = 0.5;
-    countAudio.preload = "auto";
-    countdownAudioRef.current = countAudio;
+    const tickAudio = new Audio(COUNTDOWN_AUDIO_URL);
+    tickAudio.loop = true;
+    tickAudio.volume = 0.6;
+    tickAudio.preload = "auto";
+    countdownAudioRef.current = tickAudio;
 
-    const bdayAudio = new Audio("/birthday-song.mp3");
+    const bdayAudio = new Audio(BIRTHDAY_AUDIO_URL);
     bdayAudio.loop = true;
-    bdayAudio.volume = 0.65;
+    bdayAudio.volume = 0.55;
     bdayAudio.preload = "auto";
     birthdayAudioRef.current = bdayAudio;
 
-    // Browser audio unlock on first user touch / click
+    const favAudio = new Audio(FAVORITE_AUDIO_URL);
+    favAudio.loop = true;
+    favAudio.volume = 0.65;
+    favAudio.preload = "auto";
+    favoriteAudioRef.current = favAudio;
+
     const unlockAudio = () => {
-      setHasInteracted(true);
-
-      // Silent dummy play to unlock browser audio context
-      if (countdownAudioRef.current && stage === "countdown") {
-        countdownAudioRef.current.play().catch(() => {});
-      }
-
+      if (countdownAudioRef.current) countdownAudioRef.current.load();
+      if (birthdayAudioRef.current) birthdayAudioRef.current.load();
+      if (favoriteAudioRef.current) favoriteAudioRef.current.load();
       window.removeEventListener("click", unlockAudio);
       window.removeEventListener("touchstart", unlockAudio);
     };
@@ -76,124 +82,149 @@ function App() {
     return () => {
       window.removeEventListener("click", unlockAudio);
       window.removeEventListener("touchstart", unlockAudio);
-      if (countdownAudioRef.current) {
-        countdownAudioRef.current.pause();
-        countdownAudioRef.current = null;
-      }
-      if (birthdayAudioRef.current) {
-        birthdayAudioRef.current.pause();
-        birthdayAudioRef.current = null;
-      }
+      [countdownAudioRef, birthdayAudioRef, favoriteAudioRef].forEach((ref) => {
+        if (ref.current) {
+          ref.current.pause();
+          ref.current = null;
+        }
+      });
     };
   }, []);
 
-  // 2. Countdown Interval Tracker
+  // 2. Countdown Interval & 10s Trigger
   useEffect(() => {
     const timer = setInterval(() => {
       const newTime = getTimeLeft();
       setTimeLeft(newTime);
 
+      const isLastTenSeconds =
+        !newTime.birthdayMode &&
+        newTime.days === 0 &&
+        newTime.hours === 0 &&
+        newTime.minutes === 0 &&
+        newTime.seconds <= 10 &&
+        newTime.seconds > 0;
+
+      if (isLastTenSeconds && countdownAudioRef.current && !isMuted) {
+        if (countdownAudioRef.current.paused) {
+          countdownAudioRef.current.currentTime = 0;
+          countdownAudioRef.current.play().catch(() => {});
+        }
+      }
+
       if (newTime.birthdayMode) {
-        setStage((curr) => (curr === "countdown" ? "birthday" : curr));
+        setStage((curr) => {
+          if (curr === "countdown") {
+            window.history.replaceState({ stage: "birthday" }, "");
+            return "birthday";
+          }
+          return curr;
+        });
       }
     }, 1000);
 
     return () => clearInterval(timer);
+  }, [isMuted]);
+
+  // 3. Native Back Button Listener (popstate)
+  useEffect(() => {
+    const handlePopState = (event) => {
+      if (event.state && event.state.stage) {
+        setStage(event.state.stage);
+      } else {
+        setStage("birthday");
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
-  // 3. Stage Change Music Transition
-  useEffect(() => {
-    if (stage !== "countdown") {
-      // Step A: Countdown audio ko gracefully fade & stop karo
-      if (countdownAudioRef.current) {
-        countdownAudioRef.current.pause();
-        countdownAudioRef.current.currentTime = 0;
-      }
-
-      // Step B: Blast hone ke thik baad Birthday Song guarantee play karo
-      const songDelay = setTimeout(() => {
-        if (birthdayAudioRef.current && !isMuted) {
-          birthdayAudioRef.current
-            .play()
-            .then(() => {
-              // Playing successfully
-            })
-            .catch((err) => {
-              console.warn(
-                "Audio autoplay blocked by browser policy, tap anywhere to resume:",
-                err,
-              );
-            });
-        }
-      }, 1400); // 1.4s delay so that popper blast plays cleanly first
-
-      return () => clearTimeout(songDelay);
-    }
-  }, [stage, isMuted]);
-
-  // 4. Global Mute / Unmute Synchronization
-  useEffect(() => {
-    if (countdownAudioRef.current) {
-      countdownAudioRef.current.muted = isMuted;
-    }
-    if (birthdayAudioRef.current) {
-      birthdayAudioRef.current.muted = isMuted;
-      if (
-        !isMuted &&
-        stage !== "countdown" &&
-        birthdayAudioRef.current.paused
-      ) {
-        birthdayAudioRef.current.play().catch(() => {});
-      }
-    }
-  }, [isMuted, stage]);
-
-  const toggleMute = () => {
-    setIsMuted((prev) => !prev);
+  const navigateTo = (nextStage) => {
+    window.history.pushState({ stage: nextStage }, "");
+    setStage(nextStage);
   };
 
-  return (
-    <main
-      onClick={() => {
-        // Fallback: Agar browser ne block kiya ho toh kisi bhi tap par song force play ho jaye
-        if (
-          stage !== "countdown" &&
-          birthdayAudioRef.current &&
-          birthdayAudioRef.current.paused &&
-          !isMuted
-        ) {
-          birthdayAudioRef.current.play().catch(() => {});
+  // 4. Music Switch: Letter Open hone par Favorite Song start hoga
+  useEffect(() => {
+    const tick = countdownAudioRef.current;
+    const bday = birthdayAudioRef.current;
+    const fav = favoriteAudioRef.current;
+
+    if (stage === "countdown") {
+      if (bday) bday.pause();
+      if (fav) fav.pause();
+    } else if (stage === "birthday") {
+      if (tick) tick.pause();
+      if (fav) fav.pause();
+
+      const timer = setTimeout(() => {
+        if (bday && !isMuted && bday.paused) {
+          bday.play().catch(() => {});
         }
-      }}
-      className="relative min-h-screen w-full overflow-x-hidden bg-[#fff5f7] text-[#4a2835]"
-    >
-      {/* Floating Audio Control Pill */}
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (stage === "message") {
+      if (tick) tick.pause();
+
+      // Agar user ne envelope khol liya hai (isLetterOpened === true)
+      if (isLetterOpened) {
+        if (bday) bday.pause();
+        if (fav && !isMuted && fav.paused) {
+          fav.play().catch(() => {});
+        }
+      } else {
+        // Agar envelope abhi band hai, birthday song bajta rahega
+        if (fav) fav.pause();
+        if (bday && !isMuted && bday.paused) {
+          bday.play().catch(() => {});
+        }
+      }
+    } else if (stage === "memories") {
+      if (bday) bday.pause();
+      if (tick) tick.pause();
+      if (fav && !isMuted && fav.paused) {
+        fav.play().catch(() => {});
+      }
+    }
+  }, [stage, isLetterOpened, isMuted]);
+
+  // 5. Global Mute Sync
+  useEffect(() => {
+    if (countdownAudioRef.current) countdownAudioRef.current.muted = isMuted;
+    if (birthdayAudioRef.current) birthdayAudioRef.current.muted = isMuted;
+    if (favoriteAudioRef.current) favoriteAudioRef.current.muted = isMuted;
+  }, [isMuted]);
+
+  const toggleMute = () => setIsMuted((prev) => !prev);
+
+  return (
+    <main className="relative min-h-screen w-full overflow-x-hidden bg-[#fff5f7] text-[#4a2835]">
+      {/* Floating Audio Button */}
       <button
         type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          toggleMute();
-        }}
+        onClick={toggleMute}
         aria-label="Toggle Sound"
         className="fixed bottom-5 right-5 z-999 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-rose-200/80 bg-white/85 text-xl shadow-[0_8px_20px_rgba(244,114,182,0.25)] backdrop-blur-md transition-transform duration-300 hover:scale-110 active:scale-95"
       >
         {isMuted ? "🔇" : "🎵"}
       </button>
 
-      {/* 1️⃣ Countdown Screen */}
+      {/* Screens */}
       {stage === "countdown" && <CountdownScreen timeLeft={timeLeft} />}
 
-      {/* 2️⃣ Birthday Hero Section */}
       {stage === "birthday" && (
-        <BirthdayHero onTeddyClick={() => setStage("message")} />
+        <BirthdayHero onTeddyClick={() => navigateTo("message")} />
       )}
 
-      {/* 3️⃣ Envelope Message Section */}
       {stage === "message" && (
-        <MessageSection onHeartClick={() => setStage("memories")} />
+        <MessageSection
+          isOpened={isLetterOpened}
+          setIsOpened={setIsLetterOpened}
+          onHeartClick={() => navigateTo("memories")}
+        />
       )}
 
-      {/* 4️⃣ Memories Section */}
       {stage === "memories" && <MemoriesSection />}
     </main>
   );

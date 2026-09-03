@@ -4,18 +4,20 @@ import LetterMascot from "../assets/gifs/Lovem.gif";
 import leftGif from "../assets/gifs/Left.gif";
 import rightGif from "../assets/gifs/right.gif";
 
-function MessageSection({ onHeartClick }) {
-  const [stage, setStage] = useState("sealed"); // sealed, unfolding, opened
+function MessageSection({ isOpened, setIsOpened, onHeartClick }) {
+  // Agar pehle khul chuka hai (back button se aane par) to directly opened rahega
+  const [stage, setStage] = useState(isOpened ? "opened" : "sealed");
 
   const handleOpenComplete = () => {
     setTimeout(() => {
       setStage("opened");
+      if (setIsOpened) setIsOpened(true); // 🎵 Favorite song trigger karega
     }, 150);
   };
 
   return (
     <section className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-linear-to-b from-[#fff5f7] via-[#ffecf2] to-[#ffe4ec] px-4 py-8 text-[#4a2835] select-none">
-      {/* 🌸 Ambient Atmosphere Orbs (Matched with previous screens) */}
+      {/* 🌸 Ambient Atmosphere Orbs */}
       <div className="pointer-events-none absolute -left-20 -top-20 h-80 w-80 rounded-full bg-rose-200/40 blur-3xl animate-pulse" />
       <div className="pointer-events-none absolute -bottom-20 -right-20 h-96 w-96 rounded-full bg-pink-200/40 blur-3xl animate-pulse" />
 
@@ -61,13 +63,13 @@ function MessageSection({ onHeartClick }) {
             <img
               src={LetterMascot}
               alt="Cute Mascot with letter"
-              className="h-28 w-28 object-contain drop-shadow-[0_8px_16px_rgba(158,28,40,0.12)] transition-transform duration-300 hover:scale-110 sm:h-30 sm:w-30"
+              className="h-24 w-24 object-contain drop-shadow-[0_8px_16px_rgba(158,28,40,0.12)] transition-transform duration-300 hover:scale-110 sm:h-28 sm:w-28"
             />
           </div>
         </div>
 
         {/* Envelope & Letter Interactive Group */}
-        <div className="relative mt-1 lg:mt-8 flex h-56 w-full items-center justify-center">
+        <div className="relative mt-1 lg:mt-6 flex h-56 w-full items-center justify-center">
           {/* Canvas Envelope */}
           <div
             className={`transition-all duration-700 ease-in-out ${
@@ -157,7 +159,7 @@ function MessageSection({ onHeartClick }) {
                 style={{ fontFamily: "'Caveat', cursive" }}
                 className="relative z-10 my-4 flex flex-col gap-3 px-2 text-center"
               >
-                <p className="inline-block transform rotate-[-1.8deg] text-[16px] italic leading-snug text-[#2c1810] sm:text-[19px] sm:leading-relaxed">
+                <p className="inline-block transform -rotate-2 text-[16px] italic leading-snug text-[#2c1810] sm:text-[19px] sm:leading-relaxed">
                   It's kind of wild to think about how long we've known each
                   other now. We were just kids when we met, and somehow we've
                   grown up side by side, figuring it all out as we went. I don't
@@ -165,7 +167,7 @@ function MessageSection({ onHeartClick }) {
                   looking at us now, I'm so glad it did.
                 </p>
 
-                <p className="inline-block transform rotate-[1.2deg] text-[16px] italic leading-snug text-[#2c1810] sm:text-[19px] sm:leading-relaxed">
+                <p className="inline-block transform rotate-1 text-[16px] italic leading-snug text-[#2c1810] sm:text-[19px] sm:leading-relaxed">
                   You've been there through every version of me—through all the
                   messy, brilliant, and totally ordinary parts of life—and I
                   honestly can't imagine doing any of it without you. You've got
@@ -180,7 +182,7 @@ function MessageSection({ onHeartClick }) {
                 <img
                   src={leftGif}
                   alt="Love accent left"
-                  className="h-15 w-15 lg:h-20 lg:w-20 sm:h-12 sm:w-12 object-contain drop-shadow-sm -scale-x-100"
+                  className="h-12 w-12 object-contain drop-shadow-sm -scale-x-100 sm:h-14 sm:w-14 lg:h-16 lg:w-16"
                 />
 
                 {/* Center Text */}
@@ -203,7 +205,7 @@ function MessageSection({ onHeartClick }) {
                 <img
                   src={rightGif}
                   alt="Love accent right"
-                  className="h-15 w-15 lg:h-20 lg:w-20 sm:h-12 sm:w-12 object-contain drop-shadow-sm"
+                  className="h-12 w-12 object-contain drop-shadow-sm sm:h-14 sm:w-14 lg:h-16 lg:w-16"
                 />
               </div>
 
