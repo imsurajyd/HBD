@@ -11,7 +11,7 @@ import BIRTHDAY_AUDIO_URL from "./assets/music/Birthday.mp3"; // Birthday Hero S
 import FAVORITE_AUDIO_URL from "./assets/music/Favorite.mp3"; // GF's Favorite Song
 
 // TESTING: 14 seconds
-const BIRTHDAY_DATE = new Date(Date.now() + 14 * 1000);
+const BIRTHDAY_DATE = new Date(Date.now() + 25 * 1000);
 
 // FINAL:
 // const BIRTHDAY_DATE = new Date("2026-09-09T00:00:00");

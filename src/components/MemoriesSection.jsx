@@ -62,7 +62,7 @@ function MemoriesSection() {
   const showPrevButton = deck.length > 0 && peeledStack.length > 0;
 
   return (
-    <section className="relative flex min-h-screen w-full flex-col items-center justify-between overflow-hidden bg-gradient-to-b from-[#fff5f7] via-[#ffecf2] to-[#ffe4ec] px-4 py-6 text-[#4a2835] select-none sm:py-8">
+    <section className="relative flex min-h-screen w-full flex-col items-center justify-between overflow-hidden bg-linear-to-b from-[#fff5f7] via-[#ffecf2] to-[#ffe4ec] px-4 py-6 text-[#4a2835] select-none sm:py-8">
       {/* 🌸 Ambient Atmosphere Orbs */}
       <div className="pointer-events-none absolute -left-20 -top-20 h-80 w-80 rounded-full bg-rose-200/40 blur-3xl animate-pulse" />
       <div className="pointer-events-none absolute -bottom-20 -right-20 h-96 w-96 rounded-full bg-pink-200/40 blur-3xl animate-pulse" />
@@ -104,7 +104,7 @@ function MemoriesSection() {
       </div>
 
       {/* 📸 The Physical Photo Deck Area (Exact Same Dimensions & Fixed Center Position) */}
-      <div className="relative my-auto flex h-[410px] w-full max-w-sm items-center justify-center sm:h-[460px]">
+      <div className="relative my-auto flex h-102.5 w-full max-w-sm items-center justify-center sm:h-115">
         {/* Soft shadow below the deck */}
         <div className="pointer-events-none absolute h-64 w-72 rounded-3xl bg-[#d49aa9]/25 blur-2xl" />
 
