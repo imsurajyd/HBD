@@ -1,43 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import TimeBox from "./TimeBox";
 import Wait from "../assets/gifs/Wait.gif";
-
-// Subtle cute click pop audio
-const playSoftPop = () => {
-  try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-    const ctx = new AudioContext();
-    if (ctx.state === "suspended") ctx.resume();
-
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(520, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.05);
-
-    gain.gain.setValueAtTime(0.18, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start();
-    osc.stop(ctx.currentTime + 0.07);
-  } catch (e) {}
-};
+import CanvasBoyThief, { playCartoonSfx } from "./CanvasBoyThief";
 
 function CountdownScreen({ timeLeft }) {
-  const [isFastForwarding, setIsFastForwarding] = useState(false);
-  const [fakeTime, setFakeTime] = useState(null); // { days, hours, minutes, seconds }
-  const [bubbleMessage, setBubbleMessage] = useState(null);
+  // Prank Stages:
+  // "idle" -> "enter_and_steal" -> "show_taunt" -> "escape_right" -> "empty_wait" -> "returning" -> "idle"
+  const [prankStage, setPrankStage] = useState("idle");
+  const sequenceTimeoutRef = useRef(null);
 
-  const fastForwardIntervalRef = useRef(null);
-  const stageTimeoutRef = useRef(null);
-  const cleanupTimeoutRef = useRef(null);
-
-  // Aakhri 10 seconds check (Days, Hours, Mins = 0 aur Seconds <= 10)
+  // Aakhri 10 seconds protection
   const isUrgent =
     timeLeft.days === 0 &&
     timeLeft.hours === 0 &&
@@ -45,70 +17,52 @@ function CountdownScreen({ timeLeft }) {
     timeLeft.seconds <= 10 &&
     timeLeft.seconds > 0;
 
-  // Agar timer aakhri 10 seconds me enter ho jaye, to prank turant cancel ho jayega
+  // Agar aakhri 10 seconds ho jayein to prank band
   useEffect(() => {
-    if (isUrgent) {
-      if (fastForwardIntervalRef.current) clearInterval(fastForwardIntervalRef.current);
-      if (stageTimeoutRef.current) clearTimeout(stageTimeoutRef.current);
-      if (cleanupTimeoutRef.current) clearTimeout(cleanupTimeoutRef.current);
-
-      setIsFastForwarding(false);
-      setFakeTime(null);
-      setBubbleMessage(null);
+    if (isUrgent && prankStage !== "idle") {
+      clearTimeout(sequenceTimeoutRef.current);
+      setPrankStage("idle");
     }
-  }, [isUrgent]);
+  }, [isUrgent, prankStage]);
 
   const handleScreenClick = () => {
-    // ⚠️ Agar 10 second ya usse kam bache hain, to prank trigger nahi hoga
-    if (isUrgent) return;
+    if (isUrgent || prankStage !== "idle") return;
 
-    // Agar pehle se chal raha ho to ignore karein
-    if (isFastForwarding || bubbleMessage !== null) return;
+    // STEP 1: Ladka aayega aur bag kholkar sab kheenchega
+    setPrankStage("enter_and_steal");
+    playCartoonSfx("steal");
 
-    playSoftPop();
-    setIsFastForwarding(true);
+    // STEP 2: 1.2s me sab bag me gaya -> Steal dialogue bolega
+    sequenceTimeoutRef.current = setTimeout(() => {
+      setPrankStage("show_taunt");
 
-    let d = Number(timeLeft.days) || 0;
-    let h = Number(timeLeft.hours) || 0;
-    let m = Number(timeLeft.minutes) || 0;
-    let s = Number(timeLeft.seconds) || 14;
+      // STEP 3: 2.2s taunt dikha kar right side bhaag kar gayab
+      sequenceTimeoutRef.current = setTimeout(() => {
+        setPrankStage("escape_right");
 
-    setFakeTime({ days: d, hours: h, minutes: m, seconds: s });
+        // 0.8s me screen se baahar, ab agle 10 SECONDS TAK SCREEN KHALI (No Text)
+        sequenceTimeoutRef.current = setTimeout(() => {
+          setPrankStage("empty_wait");
 
-    // Sabhi units ek sath rapidly collapse honge
-    fastForwardIntervalRef.current = setInterval(() => {
-      d = Math.max(0, d - 1);
-      h = Math.max(0, h - 2);
-      m = Math.max(0, m - 3);
-      s = Math.max(0, s - 2);
+          // STEP 4: Theek 10 seconds baad ladka wapas aayega, sab dega aur sorry bolega
+          sequenceTimeoutRef.current = setTimeout(() => {
+            setPrankStage("returning");
+            playCartoonSfx("heart");
 
-      if (d === 0 && h === 0 && m === 0 && s === 0) {
-        clearInterval(fastForwardIntervalRef.current);
-        setFakeTime({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        setIsFastForwarding(false);
-
-        // 1st Message: 5 seconds tak poora timer 00 pe freeze
-        setBubbleMessage("Lo ho gya time khatam, mana lo apna birthday 😏");
-
-        // 5 seconds baad funny reveal
-        stageTimeoutRef.current = setTimeout(() => {
-          setBubbleMessage("Mazak tha babu! 🤣❤️");
-
-          // 2.2 seconds baad real time restore
-          cleanupTimeoutRef.current = setTimeout(() => {
-            setBubbleMessage(null);
-            setFakeTime(null);
-          }, 2200);
-        }, 8000);
-      } else {
-        setFakeTime({ days: d, hours: h, minutes: m, seconds: s });
-      }
-    }, 85);
+            // STEP 5: 2.5s sorry bubble dikhane ke baad boy screen se exit
+            sequenceTimeoutRef.current = setTimeout(() => {
+              setPrankStage("idle");
+            }, 2500);
+          }, 10000); // ⏱️ Exactly 10 Seconds gap
+        }, 800);
+      }, 2200);
+    }, 1200);
   };
 
-  // Prank ke dauran fake time dikhega, warna actual running time
-  const currentDisplay = fakeTime !== null ? fakeTime : timeLeft;
-  const isFrozenAtZero = fakeTime !== null && fakeTime.seconds === 0 && fakeTime.minutes === 0;
+  const isContentInBag =
+    prankStage === "show_taunt" ||
+    prankStage === "escape_right" ||
+    prankStage === "empty_wait";
 
   return (
     <section
@@ -140,13 +94,59 @@ function CountdownScreen({ timeLeft }) {
         ✨
       </div>
 
-      {/* Content Container */}
-      <div className="relative z-10 flex w-full max-w-2xl flex-col items-center text-center">
+      {/* 🎒 DYNAMIC BOY RUNNER & THIEF */}
+      {prankStage !== "idle" && prankStage !== "empty_wait" && (
+        <div
+          className={`fixed z-50 flex flex-col items-center pointer-events-none transition-all duration-800 ease-in-out ${
+            prankStage === "enter_and_steal"
+              ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-100"
+              : prankStage === "show_taunt"
+              ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-105"
+              : prankStage === "escape_right"
+              ? "left-[130%] top-1/2 -translate-x-1/2 -translate-y-1/2 scale-95" // Right side bhaag gaya
+              : prankStage === "returning"
+              ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-105" // Wapas dekar speech
+              : "-left-40 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          }`}
+        >
+          {/* 1. Churaate waqt ka dialogue */}
+          {prankStage === "show_taunt" && (
+            <div className="relative mb-2 whitespace-nowrap rounded-2xl border border-rose-300 bg-white/95 px-4 py-2 text-xs font-black text-[#9e1c28] shadow-[0_8px_30px_rgba(244,114,182,0.4)] backdrop-blur-md sm:text-sm animate-bounce">
+              Ab Akele! Mana lo apna birthday! 😏🎒
+              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-3 w-3 rotate-45 border-r border-b border-rose-300 bg-white" />
+            </div>
+          )}
+
+          {/* 2. Sab dekar sorry bolne wala dialogue */}
+          {prankStage === "returning" && (
+            <div className="relative mb-2 whitespace-nowrap rounded-2xl border border-rose-300 bg-white/95 px-4 py-2 text-xs font-black text-[#9e1c28] shadow-[0_8px_30px_rgba(244,114,182,0.4)] backdrop-blur-md sm:text-sm animate-bounce">
+              sorry medam ji prank tha 🙈 | Thora sabar kare😘❤️
+              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-3 w-3 rotate-45 border-r border-b border-rose-300 bg-white" />
+            </div>
+          )}
+
+          <CanvasBoyThief isReturning={prankStage === "returning"} />
+
+          {/* Returning Heart Pop */}
+          {prankStage === "returning" && (
+            <span className="absolute -top-10 text-5xl animate-[popHeart_1.2s_ease-out_infinite]">
+              💖
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* 📦 Main Screen Content (Chori hone par bag ke andar shrink ho jayega) */}
+      <div
+        className={`relative z-10 flex w-full max-w-2xl flex-col items-center text-center transition-all duration-700 ease-in-out ${
+          isContentInBag
+            ? "scale-0 rotate-12 opacity-0 pointer-events-none -translate-y-10"
+            : "scale-100 rotate-0 opacity-100 translate-y-0"
+        }`}
+      >
         {/* Subtle Category Pill */}
         <div className="inline-flex items-center gap-2 rounded-full border border-rose-200/80 bg-white/70 px-4 py-1 shadow-xs backdrop-blur-xs">
-          <span className={`text-lg ${isFastForwarding ? "animate-spin" : "animate-pulse"}`}>
-            ⏳
-          </span>
+          <span className="text-lg animate-spin">⏳</span>
         </div>
 
         {/* Main Headline */}
@@ -166,56 +166,47 @@ function CountdownScreen({ timeLeft }) {
           A little surprise made just for you, my love ❤️
         </p>
 
-        {/* Timer Grid (Chaaron boxes ek sath fast forward / freeze honge) */}
-        <div
-          className={`mt-6 grid w-full max-w-md grid-cols-4 gap-2 transition-all duration-200 sm:gap-4 ${
-            isFastForwarding
-              ? "scale-105 animate-[shake_0.15s_infinite]"
-              : isFrozenAtZero
-              ? "scale-105 drop-shadow-[0_0_15px_rgba(223,111,141,0.65)]"
-              : isUrgent
-              ? "scale-105"
-              : "scale-100"
-          }`}
-        >
-          <TimeBox value={currentDisplay.days} label="Days" />
-          <TimeBox value={currentDisplay.hours} label="Hours" />
-          <TimeBox value={currentDisplay.minutes} label="Minutes" />
-          <TimeBox value={currentDisplay.seconds} label="Seconds" />
-        </div>
+        {/* Timer Grid */}
+        <div className="mt-6 grid w-full max-w-md grid-cols-4 gap-2 sm:gap-4">
+          <TimeBox value={timeLeft.days} label="Days" />
+          <TimeBox value={timeLeft.hours} label="Hours" />
+          <TimeBox value={timeLeft.minutes} label="Minutes" />
 
-        {/* Mascot + Two-Stage Dialogue Bubble */}
-        <div className="relative mt-8 flex flex-col items-center justify-center">
           <div
-            className={`absolute -top-11 z-20 whitespace-nowrap rounded-full border border-rose-300 bg-white/95 px-4 py-1.5 text-xs font-bold text-[#9e1c28] shadow-[0_8px_25px_rgba(244,114,182,0.35)] backdrop-blur-md transition-all duration-300 sm:text-sm ${
-              bubbleMessage !== null
-                ? "opacity-100 scale-100 -translate-y-1"
-                : "opacity-0 scale-75 translate-y-2 pointer-events-none"
+            className={`transition-all duration-300 ${
+              isUrgent
+                ? "scale-110 drop-shadow-[0_0_12px_rgba(223,111,141,0.5)]"
+                : "scale-100"
             }`}
           >
-            {bubbleMessage}
-            <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-2.5 w-2.5 rotate-45 border-r border-b border-rose-300 bg-white" />
+            <TimeBox value={timeLeft.seconds} label="Seconds" />
           </div>
+        </div>
 
+        {/* Mascot */}
+        <div className="mt-8 flex justify-center">
           <img
             src={Wait}
             alt="Cute celebration mascot"
-            className={`h-28 w-auto object-contain drop-shadow-[0_12px_24px_rgba(158,28,40,0.15)] transition-transform duration-300 sm:h-32 ${
-              isFastForwarding
-                ? "scale-115 -translate-y-2"
-                : bubbleMessage !== null
-                ? "scale-110 -translate-y-1"
-                : "hover:scale-105"
-            }`}
+            className="h-28 w-auto object-contain drop-shadow-[0_12px_24px_rgba(158,28,40,0.15)] transition-transform duration-300 hover:scale-105 sm:h-32"
           />
         </div>
       </div>
 
       <style>{`
-        @keyframes shake {
-          0%, 100% { transform: translateX(0) rotate(0deg); }
-          25% { transform: translateX(-2px) rotate(-1.5deg); }
-          75% { transform: translateX(2px) rotate(1.5deg); }
+        @keyframes popHeart {
+          0% {
+            opacity: 0;
+            transform: translateY(10px) scale(0.5);
+          }
+          50% {
+            opacity: 1;
+            transform: translateY(-25px) scale(1.3);
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(-45px) scale(0.8);
+          }
         }
       `}</style>
     </section>
