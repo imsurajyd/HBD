@@ -155,8 +155,8 @@ function CountdownScreen({ timeLeft, recipientName = "my love" }) {
         {/* Main Headline */}
         <h1 className="font-display mt-4 text-5xl font-bold leading-[1.05] tracking-tight text-[#4a2835] sm:text-7xl md:text-7xl">
           Something <br />
-          <span className="italic text-[#df6f8d]">Beautiful</span> <br />
-          Is Coming...
+          <span className="text-[#df6f8d]">Beautiful</span> <br />
+          is Coming...
         </h1>
 
         {/* Ribbon / Bow Accent */}

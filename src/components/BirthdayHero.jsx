@@ -163,36 +163,28 @@ function BirthdayHero({ recipientName, onTeddyClick }) {
 
       {/* Main Single-Screen Content Wrapper */}
       <div className="relative z-20 my-auto flex w-full max-w-xl flex-col items-center text-center">
-        {/* 1. Animated Canvas Cake */}
-        <div className="flex h-24 w-24 items-center justify-center sm:h-28 sm:w-28">
-          <CanvasCake />
-        </div>
 
         {/* 2. Birthday Headline (Perfect Color & Font Matched) */}
         <h1 className="font-display mt-1 text-4xl font-bold leading-[1.1] tracking-tight text-[#4a2835] sm:text-6xl md:text-7xl">
           Happy <br />
-          <span className="italic font-serif font-medium text-[#df6f8d]">
+          <span className="text-[#df6f8d]">
             {displayOrdinal} Birthday
           </span>
           <br />
           <span className="inline-flex items-center justify-center gap-2 mt-1">
-            <span className="italic font-serif font-normal text-[#df6f8d] text-3xl sm:text-5xl md:text-6xl">
+            <span className=" text-[#df6f8d] text-3xl sm:text-5xl md:text-6xl">
               My love
             </span>{" "}
-            <span className="text-[#4a2835] text-3xl sm:text-5xl md:text-6xl capitalize">
+            <span className="text-[#df6f8d] text-3xl sm:text-5xl md:text-6xl capitalize">
               {displayName}
             </span>
             <span className="text-2xl sm:text-4xl">❤️</span>
           </span>
         </h1>
 
-        {/* 3. Dance Mascot GIF */}
-        <div className="mt-2 flex justify-center">
-          <img
-            src={Dance}
-            alt="Celebrating Cute Mascot"
-            className="h-20 w-auto object-contain drop-shadow-[0_10px_20px_rgba(158,28,40,0.15)] sm:h-28"
-          />
+        {/* 1. Animated Canvas Cake */}
+        <div className="flex h-24 w-24 items-center justify-center sm:h-28 sm:w-28">
+          <CanvasCake />
         </div>
 
         {/* 4. Subtitle Message */}
