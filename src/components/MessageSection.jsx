@@ -1,12 +1,23 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import CanvasEnvelope from "./CanvasEnvelope";
 import LetterMascot from "../assets/gifs/Lovem.gif";
 import leftGif from "../assets/gifs/Left.gif";
 import rightGif from "../assets/gifs/right.gif";
 
-function MessageSection({ isOpened, setIsOpened, onHeartClick }) {
+function MessageSection({ recipientName, isOpened, setIsOpened, onHeartClick }) {
   // Agar pehle khul chuka hai (back button se aane par) to directly opened rahega
   const [stage, setStage] = useState(isOpened ? "opened" : "sealed");
+
+  // Dynamic Name Resolver (Prop priority -> URL search param -> fallback "Suraj")
+  const displayName = useMemo(() => {
+    if (recipientName && recipientName.trim()) return recipientName.trim();
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get("name")?.trim();
+      if (name) return name;
+    }
+    return "Suraj";
+  }, [recipientName]);
 
   const handleOpenComplete = () => {
     setTimeout(() => {
@@ -157,9 +168,14 @@ function MessageSection({ isOpened, setIsOpened, onHeartClick }) {
               {/* Handwritten Body */}
               <div
                 style={{ fontFamily: "'Caveat', cursive" }}
-                className="relative z-10 my-4 flex flex-col gap-3 px-2 text-center"
+                className="relative z-10 my-4 flex flex-col gap-2.5 px-2 text-center"
               >
-                <p className="inline-block transform -rotate-2 text-[16px] italic leading-snug text-[#2c1810] sm:text-[19px] sm:leading-relaxed">
+                {/* Salutation with Dynamic Name */}
+                <p className="text-xl sm:text-2xl font-bold text-[#9e1c28] capitalize">
+                  My Dearest {displayName} ❤️,
+                </p>
+
+                <p className="inline-block transform -rotate-1 text-[16px] italic leading-snug text-[#2c1810] sm:text-[18px] sm:leading-relaxed">
                   It's kind of wild to think about how long we've known each
                   other now. We were just kids when we met, and somehow we've
                   grown up side by side, figuring it all out as we went. I don't
@@ -167,7 +183,7 @@ function MessageSection({ isOpened, setIsOpened, onHeartClick }) {
                   looking at us now, I'm so glad it did.
                 </p>
 
-                <p className="inline-block transform rotate-1 text-[16px] italic leading-snug text-[#2c1810] sm:text-[19px] sm:leading-relaxed">
+                <p className="inline-block transform rotate-1 text-[16px] italic leading-snug text-[#2c1810] sm:text-[18px] sm:leading-relaxed">
                   You've been there through every version of me—through all the
                   messy, brilliant, and totally ordinary parts of life—and I
                   honestly can't imagine doing any of it without you. You've got
@@ -185,13 +201,13 @@ function MessageSection({ isOpened, setIsOpened, onHeartClick }) {
                   className="h-12 w-12 object-contain drop-shadow-sm -scale-x-100 sm:h-14 sm:w-14 lg:h-16 lg:w-16"
                 />
 
-                {/* Center Text */}
+                {/* Center Text with Dynamic Recipient Name */}
                 <div
                   style={{ fontFamily: "'Permanent Marker', cursive" }}
                   className="text-center text-[#9e1c28]"
                 >
-                  <p className="text-[11px] tracking-wider sm:text-sm">
-                    I LOVE YOU SO MUCH.
+                  <p className="text-[11px] tracking-wider sm:text-sm uppercase">
+                    I LOVE YOU SO MUCH, {displayName}.
                   </p>
                   <p className="text-[10px] tracking-wider sm:text-xs">
                     ALWAYS HAVE, ALWAYS WILL.

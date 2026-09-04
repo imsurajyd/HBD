@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 
 import CountdownScreen from "./components/CountdownScreen";
 import BirthdayHero from "./components/BirthdayHero";
@@ -10,14 +10,27 @@ import COUNTDOWN_AUDIO_URL from "./assets/music/Countdown.mp3"; // 10s Ticking
 import BIRTHDAY_AUDIO_URL from "./assets/music/Birthday.mp3"; // Birthday Hero Song
 import FAVORITE_AUDIO_URL from "./assets/music/Favorite.mp3"; // GF's Favorite Song
 
-// TESTING: 14 seconds
-const BIRTHDAY_DATE = new Date(Date.now() + 40 * 1000);
+// URL Params Reader Helper
+function getUrlParams() {
+  if (typeof window === "undefined") return { name: "Meri Jaan", targetDate: null };
 
-// FINAL:
-// const BIRTHDAY_DATE = new Date("2026-09-09T00:00:00");
+  const params = new URLSearchParams(window.location.search);
+  const name = params.get("name")?.trim() || "Meri Jaan";
+  const dateParam = params.get("date"); // Format: 2026-09-09T00:00:00
 
-function getTimeLeft() {
-  const difference = BIRTHDAY_DATE.getTime() - new Date().getTime();
+  let parsedDate = null;
+  if (dateParam) {
+    const d = new Date(dateParam);
+    if (!isNaN(d.getTime())) {
+      parsedDate = d;
+    }
+  }
+
+  return { name, targetDate: parsedDate };
+}
+
+function calculateTimeLeft(targetDate) {
+  const difference = targetDate.getTime() - new Date().getTime();
 
   if (difference <= 0) {
     return {
@@ -39,7 +52,15 @@ function getTimeLeft() {
 }
 
 function App() {
-  const [timeLeft, setTimeLeft] = useState(getTimeLeft());
+  // 1. Dynamic Date & Name from URL (Fallback: 40s testing date)
+  const { name: recipientName, targetDate: urlTargetDate } = useMemo(() => getUrlParams(), []);
+  
+  // Agar URL me ?date=... hai to wo use hoga, warna aapka default 40s testing timer
+  const birthdayDate = useMemo(() => {
+    return urlTargetDate || new Date(Date.now() + 40 * 1000);
+  }, [urlTargetDate]);
+
+  const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft(birthdayDate));
   const [stage, setStage] = useState("countdown");
   const [isMuted, setIsMuted] = useState(false);
   const [isLetterOpened, setIsLetterOpened] = useState(false);
@@ -94,7 +115,7 @@ function App() {
   // 2. Countdown Interval & 10s Trigger
   useEffect(() => {
     const timer = setInterval(() => {
-      const newTime = getTimeLeft();
+      const newTime = calculateTimeLeft(birthdayDate);
       setTimeLeft(newTime);
 
       const isLastTenSeconds =
@@ -124,7 +145,7 @@ function App() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isMuted]);
+  }, [birthdayDate, isMuted]);
 
   // 3. Native Back Button Listener (popstate)
   useEffect(() => {
@@ -167,14 +188,12 @@ function App() {
     } else if (stage === "message") {
       if (tick) tick.pause();
 
-      // Agar user ne envelope khol liya hai (isLetterOpened === true)
       if (isLetterOpened) {
         if (bday) bday.pause();
         if (fav && !isMuted && fav.paused) {
           fav.play().catch(() => {});
         }
       } else {
-        // Agar envelope abhi band hai, birthday song bajta rahega
         if (fav) fav.pause();
         if (bday && !isMuted && bday.paused) {
           bday.play().catch(() => {});
@@ -210,22 +229,25 @@ function App() {
         {isMuted ? "🔇" : "🎵"}
       </button>
 
-      {/* Screens */}
-      {stage === "countdown" && <CountdownScreen timeLeft={timeLeft} />}
+      {/* Screens (name prop pass kiya gaya hai har screen ke liye) */}
+      {stage === "countdown" && (
+        <CountdownScreen timeLeft={timeLeft} recipientName={recipientName} />
+      )}
 
       {stage === "birthday" && (
-        <BirthdayHero onTeddyClick={() => navigateTo("message")} />
+        <BirthdayHero recipientName={recipientName} onTeddyClick={() => navigateTo("message")} />
       )}
 
       {stage === "message" && (
         <MessageSection
+          recipientName={recipientName}
           isOpened={isLetterOpened}
           setIsOpened={setIsLetterOpened}
           onHeartClick={() => navigateTo("memories")}
         />
       )}
 
-      {stage === "memories" && <MemoriesSection />}
+      {stage === "memories" && <MemoriesSection recipientName={recipientName} />}
     </main>
   );
 }

@@ -3,7 +3,7 @@ import TimeBox from "./TimeBox";
 import Wait from "../assets/gifs/Wait.gif";
 import CanvasBoyThief, { playCartoonSfx } from "./CanvasBoyThief";
 
-function CountdownScreen({ timeLeft }) {
+function CountdownScreen({ timeLeft, recipientName = "my love" }) {
   // Prank Stages:
   // "idle" -> "enter_and_steal" -> "show_taunt" -> "escape_right" -> "empty_wait" -> "returning" -> "idle"
   const [prankStage, setPrankStage] = useState("idle");
@@ -101,18 +101,19 @@ function CountdownScreen({ timeLeft }) {
             prankStage === "enter_and_steal"
               ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-100"
               : prankStage === "show_taunt"
-              ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-105"
-              : prankStage === "escape_right"
-              ? "left-[130%] top-1/2 -translate-x-1/2 -translate-y-1/2 scale-95" // Right side bhaag gaya
-              : prankStage === "returning"
-              ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-105" // Wapas dekar speech
-              : "-left-40 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-105"
+                : prankStage === "escape_right"
+                  ? "left-[130%] top-1/2 -translate-x-1/2 -translate-y-1/2 scale-95" // Right side bhaag gaya
+                  : prankStage === "returning"
+                    ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-105" // Wapas dekar speech
+                    : "-left-40 top-1/2 -translate-x-1/2 -translate-y-1/2"
           }`}
         >
           {/* 1. Churaate waqt ka dialogue */}
           {prankStage === "show_taunt" && (
             <div className="relative mb-2 whitespace-nowrap rounded-2xl border border-rose-300 bg-white/95 px-4 py-2 text-xs font-black text-[#9e1c28] shadow-[0_8px_30px_rgba(244,114,182,0.4)] backdrop-blur-md sm:text-sm animate-bounce">
-              Ab Akele! Mana lo apna birthday! 😏🎒
+              Ab Akele! Mana lo apna birthday
+              {recipientName !== "my love" ? `, ${recipientName}` : ""}! 😏🎒
               <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-3 w-3 rotate-45 border-r border-b border-rose-300 bg-white" />
             </div>
           )}
@@ -120,7 +121,9 @@ function CountdownScreen({ timeLeft }) {
           {/* 2. Sab dekar sorry bolne wala dialogue */}
           {prankStage === "returning" && (
             <div className="relative mb-2 whitespace-nowrap rounded-2xl border border-rose-300 bg-white/95 px-4 py-2 text-xs font-black text-[#9e1c28] shadow-[0_8px_30px_rgba(244,114,182,0.4)] backdrop-blur-md sm:text-sm animate-bounce">
-              sorry medam ji prank tha 🙈 | Thora sabar kare😘❤️
+              sorry{" "}
+              {recipientName !== "my love" ? `${recipientName} ji` : "medam ji"}{" "}
+              prank tha 🙈 | Thora sabar kare😘❤️
               <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-3 w-3 rotate-45 border-r border-b border-rose-300 bg-white" />
             </div>
           )}
@@ -163,7 +166,7 @@ function CountdownScreen({ timeLeft }) {
           style={{ fontFamily: "'Caveat', cursive" }}
           className="mx-auto mt-2 max-w-md text-xl text-[#8d6972] sm:text-2xl"
         >
-          A little surprise made just for you, my love ❤️
+          A little surprise made just for you, {recipientName} ❤️
         </p>
 
         {/* Timer Grid */}

@@ -1,9 +1,50 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import confetti from "canvas-confetti";
 import Confetti from "./Confetti";
 import Balloons from "./Balloons";
 import Dance from "../assets/gifs/Dance.gif";
 import CanvasCake from "./CanvasCake";
+
+// Number to ordinal suffix (e.g., 18 -> 18th, 19 -> 19th, 20 -> 20th, 21 -> 21st, 22 -> 22nd)
+function getOrdinalSuffix(number) {
+  const n = parseInt(number, 10);
+  if (isNaN(n)) return number || "18th";
+
+  const j = n % 10;
+  const k = n % 100;
+
+  if (j === 1 && k !== 11) return `${n}st`;
+  if (j === 2 && k !== 12) return `${n}nd`;
+  if (j === 3 && k !== 13) return `${n}rd`;
+  return `${n}th`;
+}
+
+// URL parameters reader
+function getBirthdayParams() {
+  if (typeof window === "undefined") return { ordinal: "18th", name: "Suraj" };
+
+  const params = new URLSearchParams(window.location.search);
+  const name = params.get("name")?.trim() || "Suraj";
+
+  const ageParam = params.get("age");
+  const dateParam = params.get("date");
+
+  let calculatedNumber = 18;
+
+  if (ageParam) {
+    calculatedNumber = ageParam;
+  } else if (dateParam) {
+    const d = new Date(dateParam);
+    if (!isNaN(d.getTime())) {
+      calculatedNumber = d.getDate(); // Month ki date (e.g. 18, 19, 20)
+    }
+  }
+
+  return {
+    ordinal: getOrdinalSuffix(calculatedNumber),
+    name,
+  };
+}
 
 // Synthetic party popper / balloon burst audio (no external file needed)
 const playPopperBlastSound = () => {
@@ -44,7 +85,11 @@ const playPopperBlastSound = () => {
   }
 };
 
-function BirthdayHero({ onTeddyClick }) {
+function BirthdayHero({ recipientName, onTeddyClick }) {
+  const params = useMemo(() => getBirthdayParams(), []);
+  const displayName = recipientName || params.name;
+  const displayOrdinal = params.ordinal;
+
   useEffect(() => {
     // 💥 1. Instant balloon pop sound on entrance
     playPopperBlastSound();
@@ -123,10 +168,22 @@ function BirthdayHero({ onTeddyClick }) {
           <CanvasCake />
         </div>
 
-        {/* 2. Birthday Headline */}
-        <h1 className="font-display mt-1 text-4xl font-bold leading-tight tracking-tight text-[#4a2835] sm:text-6xl md:text-7xl">
+        {/* 2. Birthday Headline (Perfect Color & Font Matched) */}
+        <h1 className="font-display mt-1 text-4xl font-bold leading-[1.1] tracking-tight text-[#4a2835] sm:text-6xl md:text-7xl">
           Happy <br />
-          <span className="italic text-[#df6f8d]">18th Birthday</span>
+          <span className="italic font-serif font-medium text-[#df6f8d]">
+            {displayOrdinal} Birthday
+          </span>
+          <br />
+          <span className="inline-flex items-center justify-center gap-2 mt-1">
+            <span className="italic font-serif font-normal text-[#df6f8d] text-3xl sm:text-5xl md:text-6xl">
+              My love
+            </span>{" "}
+            <span className="text-[#4a2835] text-3xl sm:text-5xl md:text-6xl capitalize">
+              {displayName}
+            </span>
+            <span className="text-2xl sm:text-4xl">❤️</span>
+          </span>
         </h1>
 
         {/* 3. Dance Mascot GIF */}
@@ -145,7 +202,8 @@ function BirthdayHero({ onTeddyClick }) {
         >
           Meri zindagi ki sabse khubsurat wajah tum ho...
           <br />
-          Happy 18th Birthday to the girl who owns my whole heart. 🌸❤️
+          Happy {displayOrdinal} Birthday to my love {displayName}, who owns my
+          whole heart. 🌸❤️
         </p>
 
         {/* 5. Heart Envelope Action Button */}
