@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Circular Background Gradient -->
+    <radialGradient id="cakeBg" cx="50%" cy="38%" r="65%">
+      <stop offset="0%" stop-color="#7a1419" />
+      <stop offset="100%" stop-color="#350506" />
+    </radialGradient>
+
+    <!-- Warm Champagne Gold Gradient -->
+    <linearGradient id="goldPlate" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#faecd8" />
+      <stop offset="50%" stop-color="#d4a373" />
+      <stop offset="100%" stop-color="#9d6d3f" />
+    </linearGradient>
+
+    <!-- Candle Flame Glow -->
+    <radialGradient id="flameGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff5cc" />
+      <stop offset="40%" stop-color="#ffb703" />
+      <stop offset="100%" stop-color="#fb8500" />
+    </radialGradient>
+  </defs>
+
+  <!-- Circular Outer Base -->
+  <circle cx="32" cy="32" r="30" fill="url(#cakeBg)" />
+  <circle cx="32" cy="32" r="28" fill="none" stroke="url(#goldPlate)" stroke-width="1.5" opacity="0.8" />
+
+  <!-- Cake Stand / Base Plate -->
+  <ellipse cx="32" cy="51" rx="20" ry="2.6" fill="url(#goldPlate)" opacity="0.9" />
+
+  <!-- Bottom Tier (Deep Velvet Cake) -->
+  <path
+    d="M17 40 C17 38.5, 47 38.5, 47 40 L47 48 C47 50.5, 17 50.5, 17 48 Z"
+    fill="#4a090b"
+  />
+  <ellipse cx="32" cy="40" rx="15" ry="2.4" fill="#610e11" />
+
+  <!-- Bottom Tier Cream Drips (Warm Milk Cream) -->
+  <path
+    d="M17 40 C19 43, 21 43, 22 41 C24 44, 26 44, 28 41 C30 44, 33 44, 35 41 C37 44, 40 44, 42 41 C44 43, 46 43, 47 40 L47 39 C47 37.5, 17 37.5, 17 39 Z"
+    fill="#fffdfa"
+  />
+
+  <!-- Top Tier Cake Body -->
+  <path
+    d="M22 30 C22 28.8, 42 28.8, 42 30 L42 38 C42 40, 22 40, 22 38 Z"
+    fill="#520b0e"
+  />
+  <ellipse cx="32" cy="30" rx="10" ry="1.9" fill="#6e1114" />
+
+  <!-- Top Tier Frosting Drips -->
+  <path
+    d="M22 30 C24 32.5, 26 32.5, 27 31 C28.5 33, 31 33, 32.5 31 C34 33, 36.5 33, 38 31 C39.5 32.5, 41 32.5, 42 30 L42 29.5 C42 28, 22 28, 22 29.5 Z"
+    fill="#fffdfa"
+  />
+
+  <!-- Center Birthday Candle -->
+  <rect x="30.6" y="19" width="2.8" height="10" rx="1" fill="#fffdfa" />
+  <!-- Candle Spiral Stripe -->
+  <path d="M30.6 22 L33.4 20 M30.6 25 L33.4 23 M30.6 28 L33.4 26" stroke="#d4a373" stroke-width="0.75" />
+
+  <!-- Wick -->
+  <line x1="32" y1="19" x2="32" y2="17" stroke="#4a2835" stroke-width="0.8" />
+
+  <!-- Flickering Candle Flame -->
+  <path
+    d="M32 10.5 C34 13.5, 34.5 15, 33.8 16.2 C33.2 17.2, 30.8 17.2, 30.2 16.2 C29.5 15, 30 13.5, 32 10.5 Z"
+    fill="url(#flameGlow)"
+  />
+
+  <!-- Sparkling Glow Dot on Candle -->
+  <circle cx="32" cy="14.8" r="1" fill="#ffffff" opacity="0.9" />
+
+  <!-- Celebration Sparkles Around Cake -->
+  <path d="M12 24 Q12 27 9 27 Q12 27 12 30 Q12 27 15 27 Q12 27 12 24 Z" fill="#faecd8" opacity="0.85" />
+  <path d="M50 20 Q50 23 47 23 Q50 23 50 26 Q50 23 53 23 Q50 23 50 20 Z" fill="#faecd8" opacity="0.85" />
+  <circle cx="49" cy="38" r="1.1" fill="#d4a373" opacity="0.8" />
+  <circle cx="15" cy="44" r="1" fill="#d4a373" opacity="0.7" />
+</svg>
