@@ -25,10 +25,11 @@ function CanvasEnvelope({ isOpen, onOpenComplete }) {
     const eCy = height / 2 + eHeight * 0.1;
     const flapHeight = eHeight * 0.6;
 
-    const envColor = "#f5eada";
-    const envShadowColor = "#e8dfcc";
-    const flapColor = "#f9f2e3";
-    const heartColor = "#ff5c8a";
+    // 🍷 Royal Wine & Warm Cream Palette
+    const envColor = "#E6DDD1";
+    const envShadowColor = "#D5C8B8";
+    const flapColor = "#EDE6DC";
+    const heartColor = "#580C0D"; // Deep wine wax stamp
 
     const draw = (currentFrame) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -52,7 +53,7 @@ function CanvasEnvelope({ isOpen, onOpenComplete }) {
 
       // 3. Inner Paper Sneak Peek
       if (rotation > flapRotationLimit / 3) {
-        ctx.fillStyle = "#ffffff";
+        ctx.fillStyle = "#F5EFEB";
         ctx.fillRect(
           eCx - (eWidth / 2) * 0.9,
           eCy - (eHeight / 2) * 0.8,
@@ -85,7 +86,7 @@ function CanvasEnvelope({ isOpen, onOpenComplete }) {
       ctx.fill();
       ctx.restore();
 
-      // 5. Wax Seal Heart
+      // 5. Wax Seal Heart (Deep Wine Stamp)
       if (progress < 0.3) {
         ctx.fillStyle = heartColor;
         ctx.beginPath();
@@ -137,9 +138,9 @@ function CanvasEnvelope({ isOpen, onOpenComplete }) {
 
   return (
     <div className="relative h-40 w-56 cursor-pointer lg:h-60 lg:w-auto">
-      {/* Fixed: Used isOpen instead of undefined stage */}
+      {/* Warm Golden Glow Behind Envelope */}
       <div
-        className={`absolute inset-4 rounded-full bg-pink-400/30 blur-2xl transition-opacity duration-300 ${
+        className={`absolute inset-4 rounded-full bg-[#D4A373]/35 blur-2xl transition-opacity duration-300 ${
           isOpen ? "opacity-0" : "animate-pulse opacity-100"
         }`}
       />

@@ -16,41 +16,41 @@ function MemoryCard({ memory, index, isTop, isRemoving, onTap }) {
         isRemoving
           ? "pointer-events-none opacity-0"
           : isTop
-            ? "cursor-pointer hover:scale-[1.02] active:scale-95 drop-shadow-[0_20px_40px_rgba(60,35,45,0.28)]"
-            : "pointer-events-none drop-shadow-[0_8px_18px_rgba(60,35,45,0.12)]"
+            ? "cursor-pointer hover:scale-[1.02] active:scale-95 drop-shadow-[0_25px_45px_rgba(0,0,0,0.55)]"
+            : "pointer-events-none drop-shadow-[0_10px_22px_rgba(0,0,0,0.35)]"
       }`}
     >
-      {/* Vintage Photo Paper Frame */}
-      <div className="relative rounded-[2px] border border-[#e5d9c5] bg-[#fbf8f2] p-3 pb-7 shadow-inner sm:p-4 sm:pb-9">
+      {/* 📜 Vintage Warm Cream Polaroid Frame */}
+      <div className="relative rounded-[2px] border border-[#D5C8B8] bg-[#E6DDD1] p-3 pb-7 shadow-inner sm:p-4 sm:pb-9">
         {/* Scalloped Edge Mask */}
         <div
-          className="pointer-events-none absolute -inset-[3px] rounded-xs opacity-60"
+          className="pointer-events-none absolute -inset-[3px] rounded-xs opacity-50"
           style={{
-            backgroundImage: `radial-gradient(circle, transparent 2px, #fbf8f2 2px)`,
+            backgroundImage: `radial-gradient(circle, transparent 2px, #E6DDD1 2px)`,
             backgroundSize: "8px 8px",
           }}
         />
 
         {/* Inner Photo Frame */}
-        <div className="relative h-56 w-72 overflow-hidden rounded-[2px] bg-[#e8e0d2] shadow-[inset_0_1px_4px_rgba(0,0,0,0.15)] sm:h-64 sm:w-80">
+        <div className="relative h-56 w-72 overflow-hidden rounded-[2px] bg-[#D8CEBF] shadow-[inset_0_1px_5px_rgba(0,0,0,0.2)] sm:h-64 sm:w-80">
           <img
             src={memory.image}
             alt={memory.caption}
             className="pointer-events-none h-full w-full object-cover"
           />
-          <div className="pointer-events-none absolute inset-0 bg-amber-900/5 mix-blend-multiply" />
+          <div className="pointer-events-none absolute inset-0 bg-[#580C0D]/5 mix-blend-multiply" />
         </div>
 
-        {/* Handwritten Caption & Date */}
+        {/* Handwritten Caption & Date (Deep Wine Tone) */}
         <div className="mt-3 text-center">
           <p
             style={{ fontFamily: "'Caveat', cursive" }}
-            className="text-xl font-bold tracking-wide text-[#3f252b] sm:text-2xl"
+            className="text-xl font-bold tracking-wide text-[#580C0D] sm:text-2xl"
           >
             {memory.caption}
           </p>
           {memory.date && (
-            <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-widest text-[#9b727d]">
+            <p className="mt-0.5 text-[10px] font-bold uppercase tracking-widest text-[#8C1C20]/80">
               {memory.date}
             </p>
           )}

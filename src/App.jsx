@@ -15,7 +15,7 @@ function getUrlParams() {
   if (typeof window === "undefined") return { name: "Meri Jaan", targetDate: null };
 
   const params = new URLSearchParams(window.location.search);
-  const name = params.get("name")?.trim() || "Meri Jaan";
+  const name = params.get("name")?.trim() || "Babu";
   const dateParam = params.get("date"); // Format: 2026-09-09T00:00:00
 
   let parsedDate = null;
@@ -55,9 +55,9 @@ function App() {
   // 1. Dynamic Date & Name from URL (Fallback: 40s testing date)
   const { name: recipientName, targetDate: urlTargetDate } = useMemo(() => getUrlParams(), []);
   
-  // Agar URL me ?date=... hai to wo use hoga, warna aapka default 40s testing timer
+  // Agar URL me ?date=... hai to wo use hoga, warna default 40s testing timer
   const birthdayDate = useMemo(() => {
-    return urlTargetDate || new Date(Date.now() + 40 * 1000);
+    return urlTargetDate || new Date(Date.now() + 15 * 1000);
   }, [urlTargetDate]);
 
   const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft(birthdayDate));
@@ -218,18 +218,18 @@ function App() {
   const toggleMute = () => setIsMuted((prev) => !prev);
 
   return (
-    <main className="relative min-h-screen w-full overflow-x-hidden bg-[#fff5f7] text-[#4a2835]">
-      {/* Floating Audio Button */}
+    <main className="relative min-h-screen w-full overflow-x-hidden bg-[#580C0D] text-[#E6DDD1]">
+      {/* 🍷 Floating Audio Button (Luxury Wine & Champagne Glassmorphism) */}
       <button
         type="button"
         onClick={toggleMute}
         aria-label="Toggle Sound"
-        className="fixed bottom-5 right-5 z-999 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-rose-200/80 bg-white/85 text-xl shadow-[0_8px_20px_rgba(244,114,182,0.25)] backdrop-blur-md transition-transform duration-300 hover:scale-110 active:scale-95"
+        className="fixed bottom-5 right-5 z-999 flex h-8 w-8 lg:h-12 lg:w-12 cursor-pointer items-center justify-center rounded-full border border-[#D4A373]/40 bg-[#580C0D]/90 lg:text-xl text-sm text-[#E6DDD1] shadow-[0_8px_25px_rgba(0,0,0,0.45)] backdrop-blur-md transition-transform duration-300 hover:scale-110 active:scale-95"
       >
         {isMuted ? "🔇" : "🎵"}
       </button>
 
-      {/* Screens (name prop pass kiya gaya hai har screen ke liye) */}
+      {/* Screens */}
       {stage === "countdown" && (
         <CountdownScreen timeLeft={timeLeft} recipientName={recipientName} />
       )}

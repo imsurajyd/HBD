@@ -67,31 +67,31 @@ function CountdownScreen({ timeLeft, recipientName = "my love" }) {
   return (
     <section
       onClick={handleScreenClick}
-      className={`relative flex min-h-screen w-full cursor-pointer items-center justify-center overflow-hidden px-4 py-8 text-[#4a2835] transition-colors duration-1000 select-none ${
+      className={`relative flex min-h-screen w-full cursor-pointer items-center justify-center overflow-hidden px-4 py-8 text-[#E6DDD1] transition-colors duration-1000 select-none ${
         isUrgent
-          ? "bg-linear-to-b from-[#ffe0ea] via-[#ffccd9] to-[#ffe0ea]"
-          : "bg-linear-to-b from-[#fff5f7] via-[#ffecf2] to-[#ffe4ec]"
+          ? "bg-linear-to-b from-[#6b1012] via-[#580C0D] to-[#45090a]"
+          : "bg-linear-to-b from-[#580C0D] via-[#48090a] to-[#3a0607]"
       }`}
     >
-      {/* 🌸 Ambient Atmosphere Orbs */}
-      <div className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-rose-200/40 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-20 -right-20 h-80 w-80 rounded-full bg-pink-200/40 blur-3xl" />
+      {/* 🍷 Ambient Atmosphere Orbs */}
+      <div className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-[#8c1c20]/30 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-20 -right-20 h-80 w-80 rounded-full bg-[#E6DDD1]/10 blur-3xl" />
 
-      {/* Floating Sparkles & Emojis */}
-      <div className="pointer-events-none absolute left-[8%] top-[15%] text-2xl text-pink-300 opacity-60 animate-bounce">
+      {/* Floating Sparkles & Accents */}
+      <div className="pointer-events-none absolute left-[8%] top-[15%] text-2xl text-[#E6DDD1]/50 opacity-60 animate-bounce">
         ♡
       </div>
-      <div className="pointer-events-none absolute right-[12%] top-[18%] text-2xl text-pink-400 opacity-70 animate-pulse">
+      <div className="pointer-events-none absolute right-[12%] top-[18%] text-2xl text-[#D4A373] opacity-70 animate-pulse">
         ✦
       </div>
-      <div className="pointer-events-none absolute bottom-[18%] left-[10%] text-3xl opacity-50 animate-pulse">
-        🌸
-      </div>
-      <div className="pointer-events-none absolute right-[8%] bottom-[22%] text-3xl opacity-50 animate-bounce">
-        🌷
-      </div>
-      <div className="pointer-events-none absolute left-[15%] bottom-[8%] text-xl text-rose-300 opacity-60">
+      <div className="pointer-events-none absolute bottom-[18%] left-[10%] text-2xl opacity-40 animate-pulse">
         ✨
+      </div>
+      <div className="pointer-events-none absolute right-[8%] bottom-[22%] text-2xl opacity-40 animate-bounce">
+        🍷
+      </div>
+      <div className="pointer-events-none absolute left-[15%] bottom-[8%] text-xl text-[#E6DDD1]/60 opacity-60">
+        ✦
       </div>
 
       {/* 🎒 DYNAMIC BOY RUNNER & THIEF */}
@@ -103,28 +103,28 @@ function CountdownScreen({ timeLeft, recipientName = "my love" }) {
               : prankStage === "show_taunt"
                 ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-105"
                 : prankStage === "escape_right"
-                  ? "left-[130%] top-1/2 -translate-x-1/2 -translate-y-1/2 scale-95" // Right side bhaag gaya
+                  ? "left-[130%] top-1/2 -translate-x-1/2 -translate-y-1/2 scale-95"
                   : prankStage === "returning"
-                    ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-105" // Wapas dekar speech
+                    ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-105"
                     : "-left-40 top-1/2 -translate-x-1/2 -translate-y-1/2"
           }`}
         >
           {/* 1. Churaate waqt ka dialogue */}
           {prankStage === "show_taunt" && (
-            <div className="relative mb-2 whitespace-nowrap rounded-2xl border border-rose-300 bg-white/95 px-4 py-2 text-xs font-black text-[#9e1c28] shadow-[0_8px_30px_rgba(244,114,182,0.4)] backdrop-blur-md sm:text-sm animate-bounce">
+            <div className="relative mb-2 whitespace-nowrap rounded-2xl border border-[#E6DDD1]/40 bg-[#580C0D]/95 px-4 py-2 text-xs font-black text-[#E6DDD1] shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-md sm:text-[10px] animate-bounce">
               Ab Akele! Mana lo apna birthday
               {recipientName !== "my love" ? `, ${recipientName}` : ""}! 😏🎒
-              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-3 w-3 rotate-45 border-r border-b border-rose-300 bg-white" />
+              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-3 w-3 rotate-45 border-r border-b border-[#E6DDD1]/40 bg-[#580C0D]" />
             </div>
           )}
 
           {/* 2. Sab dekar sorry bolne wala dialogue */}
           {prankStage === "returning" && (
-            <div className="relative mb-2 whitespace-nowrap rounded-2xl border border-rose-300 bg-white/95 px-4 py-2 text-xs font-black text-[#9e1c28] shadow-[0_8px_30px_rgba(244,114,182,0.4)] backdrop-blur-md sm:text-sm animate-bounce">
+            <div className="relative mb-2 whitespace-nowrap rounded-2xl border border-[#E6DDD1]/40 bg-[#580C0D]/95 px-4 py-2 text-xs font-black text-[#E6DDD1] shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-md sm:text-[10px] animate-bounce">
               sorry{" "}
               {recipientName !== "my love" ? `${recipientName} ji` : "medam ji"}{" "}
               prank tha 🙈 | Thora sabar kare😘❤️
-              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-3 w-3 rotate-45 border-r border-b border-rose-300 bg-white" />
+              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-3 w-3 rotate-45 border-r border-b border-[#E6DDD1]/40 bg-[#580C0D]" />
             </div>
           )}
 
@@ -139,7 +139,7 @@ function CountdownScreen({ timeLeft, recipientName = "my love" }) {
         </div>
       )}
 
-      {/* 📦 Main Screen Content (Chori hone par bag ke andar shrink ho jayega) */}
+      {/* 📦 Main Screen Content */}
       <div
         className={`relative z-10 flex w-full max-w-2xl flex-col items-center text-center transition-all duration-700 ease-in-out ${
           isContentInBag
@@ -147,15 +147,11 @@ function CountdownScreen({ timeLeft, recipientName = "my love" }) {
             : "scale-100 rotate-0 opacity-100 translate-y-0"
         }`}
       >
-        {/* Subtle Category Pill */}
-        <div className="inline-flex items-center gap-2 rounded-full border border-rose-200/80 bg-white/70 px-4 py-1 shadow-xs backdrop-blur-xs">
-          <span className="text-lg animate-spin">⏳</span>
-        </div>
 
         {/* Main Headline */}
-        <h1 className="font-display mt-4 text-5xl font-bold leading-[1.05] tracking-tight text-[#4a2835] sm:text-7xl md:text-7xl">
+        <h1 className="font-display mt-4 text-5xl font-bold leading-[1.05] tracking-tight text-[#E6DDD1] sm:text-7xl md:text-7xl">
           Something <br />
-          <span className="text-[#df6f8d]">Beautiful</span> <br />
+          <span className="text-[#D4A373] italic">Beautiful</span> <br />
           is Coming...
         </h1>
 
@@ -164,7 +160,7 @@ function CountdownScreen({ timeLeft, recipientName = "my love" }) {
 
         <p
           style={{ fontFamily: "'Caveat', cursive" }}
-          className="mx-auto mt-2 max-w-md text-xl text-[#8d6972] sm:text-2xl"
+          className="mx-auto mt-2 max-w-md text-xl text-[#E6DDD1]/80 sm:text-2xl"
         >
           A little surprise made just for you, {recipientName} ❤️
         </p>
@@ -178,7 +174,7 @@ function CountdownScreen({ timeLeft, recipientName = "my love" }) {
           <div
             className={`transition-all duration-300 ${
               isUrgent
-                ? "scale-110 drop-shadow-[0_0_12px_rgba(223,111,141,0.5)]"
+                ? "scale-110 drop-shadow-[0_0_15px_rgba(230,221,209,0.4)]"
                 : "scale-100"
             }`}
           >
@@ -191,7 +187,7 @@ function CountdownScreen({ timeLeft, recipientName = "my love" }) {
           <img
             src={Wait}
             alt="Cute celebration mascot"
-            className="h-28 w-auto object-contain drop-shadow-[0_12px_24px_rgba(158,28,40,0.15)] transition-transform duration-300 hover:scale-105 sm:h-32"
+            className="h-28 w-auto object-contain drop-shadow-[0_12px_24px_rgba(0,0,0,0.35)] transition-transform duration-300 hover:scale-105 sm:h-32"
           />
         </div>
       </div>

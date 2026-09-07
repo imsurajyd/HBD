@@ -1,96 +1,115 @@
+<div align="center">
+
 # 🌸 18th Birthday Celebration — Vintage Rose Romance
 
-A handcrafted, highly aesthetic, and romantic interactive 18th Birthday web experience designed with warm rose gradients, soft creams, animated canvas elements, synthetic party blasts, and stacked nostalgic polaroid memories.
+A bespoke, interactive digital keepsake built with React, Vite, and Tailwind CSS. Features real-time countdown mechanics, synthetic audio effects via the Web Audio API, animated HTML5 canvas elements, and a nostalgic 3D polaroid photo gallery.
 
----
+[![React](https://img.shields.io/badge/React-18+-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 
-## ✨ Preview
+<br />
 
-<div align="center">
-  <img src="./assets/preview.png" alt="18th Birthday Hero Celebration Preview" width="850" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);" />
+<img src="./assets/preview.png" alt="Application Preview" width="850" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);" />
+
 </div>
 
 ---
 
-## 🎀 Key Features
+## 🌟 Key Highlights
 
-* ⏳ **Real-Time Countdown Screen:** Live calculation down to the exact second with dynamic urgency pulses in the final seconds.
-* 💥 **Synthetic Audio Popper Blast:** Zero-file-dependency Web Audio API audio synthesis producing realistic party popper/balloon burst snaps.
-* 🎂 **Interactive Canvas Cake:** Smooth candle flicker and animated cake rendering.
-* 💌 **Interactive Wax Seal Envelope:** Custom HTML5 Canvas envelope with 3D flap unsealing, animated crimson wax seal, and smooth letter extraction.
-* 📜 **Love Letter Modal:** Handwritten love message styled with romantic typography, Cupid heart graphics, and playful mascot accents.
-* 📸 **3D Vintage Polaroid Stack:** Interactive card deck with realistic deckle/scalloped edges, organic scatter rotations, and tap-to-peel reveal animations.
-* 🎵 **Audio Sync Engine:** Background music transition handler with fallback user-interaction unlock and global mute control.
-
----
-
-## 🎨 Color Palette & Design System
-
-| Color Role | Hex Code | Visual Sample |
-| :--- | :--- | :--- |
-| **Primary Background** | `#fff5f7` | Soft Pearl Rose |
-| **Secondary Fill** | `#fffdfa` | Warm Milk Cream |
-| **Rose Silk Accents** | `#fce7ee` | Delicate Blush |
-| **Primary Velvet Text** | `#4a2835` | Deep Plum Velvet |
-| **Crimson Highlight** | `#9e1c28` | Vintage Burgundy Rose |
+* **Precision Countdown Engine:** Real-time state-driven countdown tracking days, hours, minutes, and seconds, featuring urgency pulse animations in the final countdown phase.
+* **Synthetic Web Audio FX:** Custom Web Audio API implementation generating procedural party-popper and balloon-burst snaps without relying on external audio assets.
+* **Interactive 2D Canvas Cake:** Dynamic candle flame flicker rendering using HTML5 2D Canvas with interactive blow-out state triggers.
+* **Animated Wax-Seal Envelope:** 3D flap-opening simulation, animated crimson wax seal extraction, and transition into a typography-focused love letter modal.
+* **Deckle-Edged Polaroid Deck:** Stacked 3D photo gallery featuring organic rotation offsets, responsive hover dynamics, and tap-to-peel reveal flows.
+* **Fail-Safe Audio Controller:** Background audio manager with automatic policy handling, user-gesture unlock triggers, and global mute toggling.
 
 ---
 
-## 🛠️ Tech Stack
+## 🎨 Design System
 
-* **Framework:** React 18+ (Vite)
-* **Styling:** Tailwind CSS
-* **Canvas Animations:** HTML5 2D Canvas & Canvas Confetti
-* **Audio:** Web Audio API & HTML5 Audio
-* **Fonts:** *Playfair Display / Serif Display*, *Caveat (Handwritten)*, *Permanent Marker*
+The visual theme combines editorial serif typography with nostalgic vintage rose and warm milk-cream hues:
+
+| Role | Token Name | Hex Value | Preview |
+| :--- | :--- | :--- | :---: |
+| **Canvas Base** | `bg-pearl-rose` | `#fff5f7` | <img src="https://via.placeholder.com/16/fff5f7/000000?text=+" width="16" height="16" /> |
+| **Card Fill** | `surface-cream` | `#fffdfa` | <img src="https://via.placeholder.com/16/fffdfa/000000?text=+" width="16" height="16" /> |
+| **Borders & Accents** | `accent-blush` | `#fce7ee` | <img src="https://via.placeholder.com/16/fce7ee/000000?text=+" width="16" height="16" /> |
+| **Primary Typography** | `text-velvet-plum` | `#4a2835` | <img src="https://via.placeholder.com/16/4a2835/000000?text=+" width="16" height="16" /> |
+| **CTA & Wax Seal** | `brand-crimson` | `#9e1c28` | <img src="https://via.placeholder.com/16/9e1c28/000000?text=+" width="16" height="16" /> |
 
 ---
 
-## 📂 Project Structure
+## 🛠️ Technology Stack
+
+* **Core:** React 18, Vite
+* **Styling:** Tailwind CSS, Custom Utility CSS
+* **Rendering & Effects:** HTML5 Canvas API, Canvas Confetti
+* **Audio Processing:** Web Audio API (Synthesized SFX), HTML5 Audio AudioContext
+* **Typography:** Playfair Display, Caveat, Permanent Marker
+
+---
+
+## 📁 Repository Structure
 
 ```text
 ├── public/
-│   ├── birthday-song.mp3       # Romantic background melody
-│   └── countdown-sound.mp3     # Clock ticking audio
+│   ├── birthday-song.mp3       # Background score asset
+│   └── countdown-sound.mp3     # Clock ticking asset
 ├── src/
 │   ├── assets/
-│   │   ├── gifs/               # Mascots & celebration animations
-│   │   └── photos/             # Stacked polaroid photos
+│   │   ├── gifs/               # Sticker & celebration animations
+│   │   └── photos/             # Polaroid gallery image assets
 │   ├── components/
-│   │   ├── CountdownScreen.jsx # Step 1: Live countdown screen
-│   │   ├── TimeBox.jsx         # Glassmorphism timer digit pill
-│   │   ├── BirthdayHero.jsx    # Step 2: Confetti blast & cake hero
-│   │   ├── CanvasCake.jsx      # Canvas-rendered birthday cake
-│   │   ├── MessageSection.jsx  # Step 3: Letter reveal wrapper
-│   │   ├── CanvasEnvelope.jsx  # 2D Canvas animated folding envelope
-│   │   ├── MemoriesSection.jsx # Step 4: Polaroid deck stack section
-│   │   └── MemoryCard.jsx      # Scalloped photo paper card
+│   │   ├── CountdownScreen.jsx # Phase 1: Real-time countdown timer
+│   │   ├── TimeBox.jsx         # Glassmorphism counter unit
+│   │   ├── BirthdayHero.jsx    # Phase 2: Confetti blast & primary message
+│   │   ├── CanvasCake.jsx      # Procedural canvas birthday cake
+│   │   ├── MessageSection.jsx  # Phase 3: Letter reveal container
+│   │   ├── CanvasEnvelope.jsx  # Animated 2D wax-seal envelope
+│   │   ├── MemoriesSection.jsx # Phase 4: Polaroid deck layout
+│   │   └── MemoryCard.jsx      # Polaroid component with deckle edges
 │   ├── data/
-│   │   └── memories.js         # Polaroid memories photo dataset
-│   ├── App.jsx                 # Stage switcher & global audio controller
-│   └── index.css               # Tailwind & custom typography rules
-└── README.md
+│   │   └── memories.js         # Image paths and captions registry
+│   ├── App.jsx                 # Global state & stage router
+│   ├── index.css               # Design tokens & animation utilities
+│   └── main.jsx                # Application root entry point
+├── package.json
+└── vite.config.js
 
 🚀 Getting Started
-1. Clone the repository
+Prerequisites
+Node.js (version 18.0.0 or higher recommended)
+
+npm, pnpm, or yarn
+
+Installation & Setup
+Clone the repository:
+
 Bash
-git clone [https://github.com/your-username/18th-birthday-website.git](https://github.com/your-username/18th-birthday-website.git)
+git clone [https://github.com/](https://github.com/)<your-username>/18th-birthday-website.git
 cd 18th-birthday-website
-2. Install dependencies
+Install project dependencies:
+
 Bash
 npm install
-3. Setup assets
-Place your audio files inside public/ as birthday-song.mp3 and countdown-sound.mp3.
+Configure static assets:
 
-Place your memory pictures in src/assets/photos/ and configure src/data/memories.js.
+Place background music and countdown ticks in public/ as birthday-song.mp3 and countdown-sound.mp3.
 
-Put your preview screenshot inside assets/preview.png.
+Add polaroid images into src/assets/photos/ and configure image arrays inside src/data/memories.js.
 
-4. Run development server
+Place repository preview asset at assets/preview.png.
+
+Launch development environment:
+
 Bash
 npm run dev
-5. Build for production
+Generate production build:
+
 Bash
 npm run build
-💖 Made with Love
-Crafted as a one-of-a-kind digital keepsake for an unforgettable 18th Birthday.
+📄 License
+Distributed under the MIT License. See LICENSE for more information.
