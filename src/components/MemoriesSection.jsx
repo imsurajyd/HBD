@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { memories } from "../data/memories";
 import MemoryCard from "./MemoryCard";
 
@@ -9,10 +9,7 @@ import BowSticker from "../assets/stickers/Flower.png";
 import DriedFlowerSticker from "../assets/stickers/Flower2.png";
 import HibiscusSticker from "../assets/stickers/Pokie.png";
 
-function MemoriesSection() {
-  // null = Selection Hub Screen | 1 = Album 1 (18 Photos) | 2 = Album 2 (18 Photos)
-  const [selectedAlbum, setSelectedAlbum] = useState(null);
-
+function MemoriesSection({ selectedAlbum, setSelectedAlbum }) {
   const [deck, setDeck] = useState([]);
   const [peeledStack, setPeeledStack] = useState([]);
   const [removingId, setRemovingId] = useState(null);
@@ -96,10 +93,19 @@ function MemoriesSection() {
   }, [peeledStack, deck.length, selectedAlbum]);
 
   const visibleCards = deck.slice(-4);
-  const showPrevButton = deck.length > 0 && peeledStack.length > 0;
+  const isFirstPhoto = peeledStack.length === 0;
+
+  // Single button handler (no glitch/jump)
+  const handleBottomButtonClick = () => {
+    if (isFirstPhoto) {
+      handleBackToHub();
+    } else {
+      handlePreviousPhoto();
+    }
+  };
 
   return (
-    <section className="relative flex min-h-screen w-full flex-col items-center justify-between overflow-hidden bg-linear-to-b from-[#580C0D] via-[#48090a] to-[#3a0607] px-4 py-6 text-[#E6DDD1] select-none sm:py-8">
+    <section className="relative flex min-h-screen w-full flex-col items-center justify-between overflow-hidden bg-gradient-to-b from-[#580C0D] via-[#48090a] to-[#3a0607] px-4 py-6 text-[#E6DDD1] select-none sm:py-8">
       {/* Ambient Wine Orbs */}
       <div className="pointer-events-none absolute -left-20 -top-20 h-80 w-80 rounded-full bg-[#8c1c20]/30 blur-3xl animate-pulse" />
       <div className="pointer-events-none absolute -bottom-20 -right-20 h-96 w-96 rounded-full bg-[#E6DDD1]/10 blur-3xl animate-pulse" />
@@ -108,7 +114,7 @@ function MemoriesSection() {
       <img
         src={CameraSticker}
         alt="Vintage Camera"
-        className="pointer-events-none absolute left-[4%] top-[22%] lg:left-[4%] lg:top-[8%] z-999 w-20 sm:w-28 -rotate-12 drop-shadow-[0_12px_20px_rgba(0,0,0,0.55)] opacity-90 transition-transform duration-500 hover:scale-110"
+        className="pointer-events-none absolute left-[4%] top-[22%] lg:left-[4%] lg:top-[8%] z-50 w-20 sm:w-28 -rotate-12 drop-shadow-[0_12px_20px_rgba(0,0,0,0.55)] opacity-90 transition-transform duration-500 hover:scale-110"
       />
 
       {/* 🎀 2. Coquette Pink Bow Sticker (Top Right) */}
@@ -136,7 +142,7 @@ function MemoriesSection() {
       <img
         src={HibiscusSticker}
         alt="Pink Hibiscus"
-        className="pointer-events-none absolute left-[3%] top-[3%] lg:left-[48%] lg:top-[25%] z-999 w-14 sm:w-20 -rotate-12 drop-shadow-md opacity-80 blur-[0.5px]"
+        className="pointer-events-none absolute left-[3%] top-[3%] lg:left-[48%] lg:top-[25%] z-50 w-14 sm:w-20 -rotate-12 drop-shadow-md opacity-80 blur-[0.5px]"
       />
 
       {/* VIEW 1: ALBUM SELECTION HUB */}
@@ -257,7 +263,6 @@ function MemoriesSection() {
         /* VIEW 2: 18-PHOTO STACK VIEW */
         <>
           <div className="relative z-10 flex flex-col items-center text-center">
-
             <div className="flex items-center gap-3 select-none">
               <span className="h-px w-6 bg-[#D4A373]/60 sm:w-10" />
               <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#D4A373] sm:text-[11px]">
@@ -277,13 +282,13 @@ function MemoriesSection() {
               style={{ fontFamily: "'Caveat', cursive" }}
               className="mt-1 text-lg text-[#E6DDD1]/80 sm:text-2xl"
             >
-              Tap the photo to peel • Tap button below to go back
+              Tap the photo to peel • Tap button below to navigate
             </p>
           </div>
 
-          {/* The Physical Photo Deck */}
-          <div className="relative my-auto flex h-102.5 w-full max-w-sm items-center justify-center sm:h-115">
-            <div className="pointer-events-none absolute h-64 w-72 rounded-3xl bg-black/40 blur-2xl" />
+          {/* The Physical Photo Deck: Scaled properly for 4:5 cards */}
+          <div className="relative my-auto flex h-[450px] w-full max-w-md items-center justify-center sm:h-[590px]">
+            <div className="pointer-events-none absolute h-80 w-84 rounded-3xl bg-black/40 blur-2xl" />
 
             {deck.length > 0 ? (
               visibleCards.map((memory, index) => {
@@ -294,7 +299,9 @@ function MemoriesSection() {
                   <div
                     key={memory.id}
                     className={`absolute inset-0 flex items-center justify-center ${
-                      isReturning ? "animate-[reversePeelIn_0.45s_cubic-bezier(0.16,1,0.3,1)_forwards] z-50" : ""
+                      isReturning
+                        ? "animate-[reversePeelIn_0.45s_cubic-bezier(0.16,1,0.3,1)_forwards] z-50"
+                        : ""
                     }`}
                   >
                     <MemoryCard
@@ -346,24 +353,41 @@ function MemoriesSection() {
             )}
           </div>
 
-          {/* Bottom Controls */}
+          {/* Bottom Controls: Unified Smooth Button */}
           <div className="relative z-20 flex flex-col items-center gap-2 pb-3">
-            <div className="flex h-10 items-center justify-center">
+            {deck.length > 0 && (
               <button
                 type="button"
-                onClick={handlePreviousPhoto}
-                tabIndex={showPrevButton ? 0 : -1}
-                aria-hidden={!showPrevButton}
-                className={`flex cursor-pointer items-center gap-2 rounded-full border border-[#D4A373]/40 bg-[#E6DDD1] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#580C0D] shadow-md transition-all duration-300 active:scale-95 ${
-                  showPrevButton
-                    ? "opacity-100 translate-y-0 pointer-events-auto hover:bg-white hover:shadow-lg"
-                    : "opacity-0 translate-y-2 pointer-events-none"
-                }`}
+                onClick={handleBottomButtonClick}
+                className="group flex cursor-pointer items-center justify-center rounded-full border border-[#D4A373]/40 bg-[#E6DDD1] px-6 py-2 text-xs font-bold uppercase tracking-wider text-[#580C0D] shadow-md transition-all duration-200 hover:bg-white hover:shadow-lg active:scale-95"
               >
-                <span>↩</span>
-                <span>Previous Photo</span>
+                <div className="relative flex h-4 items-center justify-center overflow-hidden">
+                  {/* State 1: Back to Albums */}
+                  <span
+                    className={`flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
+                      isFirstPhoto
+                        ? "opacity-100 translate-y-0 relative pointer-events-auto"
+                        : "opacity-0 -translate-y-3 absolute pointer-events-none"
+                    }`}
+                  >
+                    <span className="transition-transform group-hover:-translate-x-0.5">←</span>
+                    <span>Back To Albums</span>
+                  </span>
+
+                  {/* State 2: Previous Photo */}
+                  <span
+                    className={`flex items-center gap-2 whitespace-nowrap transition-all duration-200 ${
+                      !isFirstPhoto
+                        ? "opacity-100 translate-y-0 relative pointer-events-auto"
+                        : "opacity-0 translate-y-3 absolute pointer-events-none"
+                    }`}
+                  >
+                    <span className="transition-transform group-hover:-translate-x-0.5">↩</span>
+                    <span>Previous Photo</span>
+                  </span>
+                </div>
               </button>
-            </div>
+            )}
           </div>
         </>
       )}
@@ -380,7 +404,7 @@ function MemoriesSection() {
           }
         }
 
-        /* 💫 Reverse Peel Animation: Right/Top se udta hua wapas deck par land karega */
+        /* 💫 Reverse Peel Animation */
         @keyframes reversePeelIn {
           0% {
             opacity: 0;

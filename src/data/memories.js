@@ -1,46 +1,46 @@
 // ==========================================
 // 📸 ALBUM 1 IMPORTS (Photo1.webp to Photo18.webp)
 // ==========================================
-import Photo1 from "../assets/photos/Photo1.webp";
-import Photo2 from "../assets/photos/Photo2.webp";
-import Photo3 from "../assets/photos/Photo3.webp";
-import Photo4 from "../assets/photos/Photo4.webp";
-import Photo5 from "../assets/photos/Photo5.webp";
-import Photo6 from "../assets/photos/Photo6.webp";
-import Photo7 from "../assets/photos/Photo7.webp";
-import Photo8 from "../assets/photos/Photo8.webp";
-import Photo9 from "../assets/photos/Photo9.webp";
-import Photo10 from "../assets/photos/Photo10.webp";
-import Photo11 from "../assets/photos/Photo11.webp";
-import Photo12 from "../assets/photos/Photo12.webp";
-import Photo13 from "../assets/photos/Photo13.webp";
-import Photo14 from "../assets/photos/Photo14.webp";
-import Photo15 from "../assets/photos/Photo15.webp";
-import Photo16 from "../assets/photos/Photo16.webp";
-import Photo17 from "../assets/photos/Photo17.webp";
-import Photo18 from "../assets/photos/Photo18.webp";
+import Photo1 from "../assets/photos/Photo1.jpeg";
+import Photo2 from "../assets/photos/Photo2.jpeg";
+import Photo3 from "../assets/photos/Photo3.jpeg";
+import Photo4 from "../assets/photos/Photo4.jpeg";
+import Photo5 from "../assets/photos/Photo5.jpeg";
+import Photo6 from "../assets/photos/Photo6.jpeg";
+import Photo7 from "../assets/photos/Photo7.jpeg";
+import Photo8 from "../assets/photos/Photo8.jpeg";
+import Photo9 from "../assets/photos/Photo9.jpeg";
+import Photo10 from "../assets/photos/Photo10.jpeg";
+import Photo11 from "../assets/photos/Photo11.jpeg";
+import Photo12 from "../assets/photos/Photo12.jpeg";
+import Photo13 from "../assets/photos/Photo13.jpeg";
+import Photo14 from "../assets/photos/Photo14.jpeg";
+import Photo15 from "../assets/photos/Photo15.jpeg";
+import Photo16 from "../assets/photos/Photo16.jpeg";
+import Photo17 from "../assets/photos/Photo17.jpeg";
+import Photo18 from "../assets/photos/Photo18.jpeg";
 
 // ==========================================
 // ✨ ALBUM 2 IMPORTS (Dia1.webp to Dia18.webp)
 // ==========================================
-import Dia1 from "../assets/photos/Dia3.webp";
-import Dia2 from "../assets/photos/Dia2.webp";
-import Dia3 from "../assets/photos/Dia1.webp";
-import Dia4 from "../assets/photos/Dia4.webp";
-import Dia5 from "../assets/photos/Dia5.webp";
-import Dia6 from "../assets/photos/Dia6.webp";
-import Dia7 from "../assets/photos/Dia7.webp";
-import Dia8 from "../assets/photos/Dia8.webp";
-import Dia9 from "../assets/photos/Dia9.webp";
-import Dia10 from "../assets/photos/Dia10.webp";
-import Dia11 from "../assets/photos/Dia11.webp";
-import Dia12 from "../assets/photos/Dia12.webp";
-import Dia13 from "../assets/photos/Dia13.webp";
-import Dia14 from "../assets/photos/Dia14.webp";
-import Dia15 from "../assets/photos/Dia15.webp";
-import Dia16 from "../assets/photos/Dia16.webp";
-import Dia17 from "../assets/photos/Dia17.webp";
-import Dia18 from "../assets/photos/Dia18.webp";
+import Dia1 from "../assets/photos/Dia3.jpeg";
+import Dia2 from "../assets/photos/Dia2.jpeg";
+import Dia3 from "../assets/photos/Dia1.jpeg";
+import Dia4 from "../assets/photos/Dia4.jpeg";
+import Dia5 from "../assets/photos/Dia5.jpeg";
+import Dia6 from "../assets/photos/Dia6.jpeg";
+import Dia7 from "../assets/photos/Dia7.jpeg";
+import Dia8 from "../assets/photos/Dia8.jpeg";
+import Dia9 from "../assets/photos/Dia9.jpeg";
+import Dia10 from "../assets/photos/Dia10.jpeg";
+import Dia11 from "../assets/photos/Dia11.jpeg";
+import Dia12 from "../assets/photos/Dia12.jpeg";
+import Dia13 from "../assets/photos/Dia13.jpeg";
+import Dia14 from "../assets/photos/Dia14.jpeg";
+import Dia15 from "../assets/photos/Dia15.jpeg";
+import Dia16 from "../assets/photos/Dia16.jpeg";
+import Dia17 from "../assets/photos/Dia17.jpeg";
+import Dia18 from "../assets/photos/Dia18.jpeg";
 
 export const memories = [
   // ==========================================

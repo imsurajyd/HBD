@@ -21,7 +21,7 @@ function MemoryCard({ memory, index, isTop, isRemoving, onTap }) {
       }`}
     >
       {/* 📜 Vintage Warm Cream Polaroid Frame */}
-      <div className="relative rounded-[2px] border border-[#D5C8B8] bg-[#E6DDD1] p-3 pb-7 shadow-inner sm:p-4 sm:pb-9">
+      <div className="relative rounded-[2px] border border-[#D5C8B8] bg-[#E6DDD1] p-3 pb-6 shadow-inner sm:p-4 sm:pb-8">
         {/* Scalloped Edge Mask */}
         <div
           className="pointer-events-none absolute -inset-[3px] rounded-xs opacity-50"
@@ -31,12 +31,12 @@ function MemoryCard({ memory, index, isTop, isRemoving, onTap }) {
           }}
         />
 
-        {/* Inner Photo Frame */}
-        <div className="relative h-56 w-72 overflow-hidden rounded-[2px] bg-[#D8CEBF] shadow-[inset_0_1px_5px_rgba(0,0,0,0.2)] sm:h-64 sm:w-80">
+        {/* Inner Photo Frame - Height increased to 320px (mobile) & 384px (desktop) */}
+        <div className="relative h-80 w-72 overflow-hidden rounded-[2px] bg-[#D8CEBF] shadow-[inset_0_1px_5px_rgba(0,0,0,0.2)] sm:h-96 sm:w-80">
           <img
-            src={memory.image}
+            src={memory.image || memory.url}
             alt={memory.caption}
-            className="pointer-events-none h-full w-full object-cover"
+            className="pointer-events-none h-full w-full object-cover object-top"
           />
           <div className="pointer-events-none absolute inset-0 bg-[#580C0D]/5 mix-blend-multiply" />
         </div>

@@ -1,14 +1,12 @@
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import CountdownScreen from "./components/CountdownScreen";
 import BirthdayHero from "./components/BirthdayHero";
 import MessageSection from "./components/MessageSection";
 import MemoriesSection from "./components/MemoriesSection";
 
-// Audio Imports
-import COUNTDOWN_AUDIO_URL from "./assets/music/Countdown.mp3"; // 10s Ticking
-import BIRTHDAY_AUDIO_URL from "./assets/music/Birthday.mp3"; // Birthday Hero Song
-import FAVORITE_AUDIO_URL from "./assets/music/Favorite.mp3"; // GF's Favorite Song
+// Custom Audio Hook
+import { useSoundManager } from "./hooks/useSoundManager";
 
 // URL Params Reader Helper
 function getUrlParams() {
@@ -52,67 +50,25 @@ function calculateTimeLeft(targetDate) {
 }
 
 function App() {
-  // 1. Dynamic Date & Name from URL (Fallback: 40s testing date)
   const { name: recipientName, targetDate: urlTargetDate } = useMemo(() => getUrlParams(), []);
   
-  // Agar URL me ?date=... hai to wo use hoga, warna default 40s testing timer
   const birthdayDate = useMemo(() => {
     return urlTargetDate || new Date(Date.now() + 15 * 1000);
   }, [urlTargetDate]);
 
   const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft(birthdayDate));
   const [stage, setStage] = useState("countdown");
-  const [isMuted, setIsMuted] = useState(false);
   const [isLetterOpened, setIsLetterOpened] = useState(false);
+  const [selectedAlbum, setSelectedAlbum] = useState(null);
 
-  const countdownAudioRef = useRef(null);
-  const birthdayAudioRef = useRef(null);
-  const favoriteAudioRef = useRef(null);
+  // 🎵 Extracted Audio Logic Hook
+  const { isMuted, toggleMute, playCountdownTick } = useSoundManager({
+    stage,
+    isLetterOpened,
+    selectedAlbum,
+  });
 
-  // 1. Audio Setup & Unlock
-  useEffect(() => {
-    const tickAudio = new Audio(COUNTDOWN_AUDIO_URL);
-    tickAudio.loop = true;
-    tickAudio.volume = 0.6;
-    tickAudio.preload = "auto";
-    countdownAudioRef.current = tickAudio;
-
-    const bdayAudio = new Audio(BIRTHDAY_AUDIO_URL);
-    bdayAudio.loop = true;
-    bdayAudio.volume = 0.55;
-    bdayAudio.preload = "auto";
-    birthdayAudioRef.current = bdayAudio;
-
-    const favAudio = new Audio(FAVORITE_AUDIO_URL);
-    favAudio.loop = true;
-    favAudio.volume = 0.65;
-    favAudio.preload = "auto";
-    favoriteAudioRef.current = favAudio;
-
-    const unlockAudio = () => {
-      if (countdownAudioRef.current) countdownAudioRef.current.load();
-      if (birthdayAudioRef.current) birthdayAudioRef.current.load();
-      if (favoriteAudioRef.current) favoriteAudioRef.current.load();
-      window.removeEventListener("click", unlockAudio);
-      window.removeEventListener("touchstart", unlockAudio);
-    };
-
-    window.addEventListener("click", unlockAudio);
-    window.addEventListener("touchstart", unlockAudio);
-
-    return () => {
-      window.removeEventListener("click", unlockAudio);
-      window.removeEventListener("touchstart", unlockAudio);
-      [countdownAudioRef, birthdayAudioRef, favoriteAudioRef].forEach((ref) => {
-        if (ref.current) {
-          ref.current.pause();
-          ref.current = null;
-        }
-      });
-    };
-  }, []);
-
-  // 2. Countdown Interval & 10s Trigger
+  // Countdown Interval & 10s Trigger
   useEffect(() => {
     const timer = setInterval(() => {
       const newTime = calculateTimeLeft(birthdayDate);
@@ -126,11 +82,8 @@ function App() {
         newTime.seconds <= 10 &&
         newTime.seconds > 0;
 
-      if (isLastTenSeconds && countdownAudioRef.current && !isMuted) {
-        if (countdownAudioRef.current.paused) {
-          countdownAudioRef.current.currentTime = 0;
-          countdownAudioRef.current.play().catch(() => {});
-        }
+      if (isLastTenSeconds) {
+        playCountdownTick();
       }
 
       if (newTime.birthdayMode) {
@@ -145,9 +98,9 @@ function App() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [birthdayDate, isMuted]);
+  }, [birthdayDate, playCountdownTick]);
 
-  // 3. Native Back Button Listener (popstate)
+  // Popstate Listener
   useEffect(() => {
     const handlePopState = (event) => {
       if (event.state && event.state.stage) {
@@ -166,60 +119,9 @@ function App() {
     setStage(nextStage);
   };
 
-  // 4. Music Switch: Letter Open hone par Favorite Song start hoga
-  useEffect(() => {
-    const tick = countdownAudioRef.current;
-    const bday = birthdayAudioRef.current;
-    const fav = favoriteAudioRef.current;
-
-    if (stage === "countdown") {
-      if (bday) bday.pause();
-      if (fav) fav.pause();
-    } else if (stage === "birthday") {
-      if (tick) tick.pause();
-      if (fav) fav.pause();
-
-      const timer = setTimeout(() => {
-        if (bday && !isMuted && bday.paused) {
-          bday.play().catch(() => {});
-        }
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else if (stage === "message") {
-      if (tick) tick.pause();
-
-      if (isLetterOpened) {
-        if (bday) bday.pause();
-        if (fav && !isMuted && fav.paused) {
-          fav.play().catch(() => {});
-        }
-      } else {
-        if (fav) fav.pause();
-        if (bday && !isMuted && bday.paused) {
-          bday.play().catch(() => {});
-        }
-      }
-    } else if (stage === "memories") {
-      if (bday) bday.pause();
-      if (tick) tick.pause();
-      if (fav && !isMuted && fav.paused) {
-        fav.play().catch(() => {});
-      }
-    }
-  }, [stage, isLetterOpened, isMuted]);
-
-  // 5. Global Mute Sync
-  useEffect(() => {
-    if (countdownAudioRef.current) countdownAudioRef.current.muted = isMuted;
-    if (birthdayAudioRef.current) birthdayAudioRef.current.muted = isMuted;
-    if (favoriteAudioRef.current) favoriteAudioRef.current.muted = isMuted;
-  }, [isMuted]);
-
-  const toggleMute = () => setIsMuted((prev) => !prev);
-
   return (
     <main className="relative min-h-screen w-full overflow-x-hidden bg-[#580C0D] text-[#E6DDD1]">
-      {/* 🍷 Floating Audio Button (Luxury Wine & Champagne Glassmorphism) */}
+      {/* Floating Audio Button */}
       <button
         type="button"
         onClick={toggleMute}
@@ -247,7 +149,13 @@ function App() {
         />
       )}
 
-      {stage === "memories" && <MemoriesSection recipientName={recipientName} />}
+      {stage === "memories" && (
+        <MemoriesSection
+          recipientName={recipientName}
+          selectedAlbum={selectedAlbum}
+          setSelectedAlbum={setSelectedAlbum}
+        />
+      )}
     </main>
   );
 }
