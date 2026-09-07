@@ -1,8 +1,7 @@
 import { useState, useMemo } from "react";
 import CanvasEnvelope from "./CanvasEnvelope";
 import LetterMascot from "../assets/gifs/Lovem.gif";
-import leftGif from "../assets/gifs/Left.gif";
-import LetterBackground from "../assets/photos/LetterBackground.png";
+import LetterBackground from "../assets/photos/LetterBackground.webp";
 
 // 🎀 Real Corner Accent Stickers
 import RedBowSticker from "../assets/stickers/redBow.png";
