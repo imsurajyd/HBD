@@ -130,41 +130,68 @@ function MessageSection({
 
               {/* Scattered Subtle Background Hearts */}
               <div className="pointer-events-none absolute inset-0 select-none overflow-hidden opacity-30 rounded-2xl">
-                <span className="absolute left-[10%] top-[8%] text-lg sm:text-xl">💕</span>
-                <span className="absolute right-[12%] top-[10%] text-base sm:text-lg -rotate-12">💗</span>
-                <span className="absolute left-[14%] top-[30%] text-sm rotate-12">💖</span>
-                <span className="absolute right-[14%] top-[34%] text-base">💕</span>
-                <span className="absolute left-[10%] top-[54%] text-lg -rotate-12">💗</span>
-                <span className="absolute right-[12%] top-[58%] text-sm rotate-45">💖</span>
-                <span className="absolute left-[14%] bottom-[20%] text-base">💕</span>
-                <span className="absolute right-[14%] bottom-[22%] text-lg -rotate-6">💗</span>
-                <span className="absolute left-[26%] bottom-[12%] text-xs">💖</span>
-                <span className="absolute right-[26%] bottom-[14%] text-xs">💕</span>
+                <span className="absolute left-[10%] top-[8%] text-lg sm:text-xl">
+                  💕
+                </span>
+                <span className="absolute right-[12%] top-[10%] text-base sm:text-lg -rotate-12">
+                  💗
+                </span>
+                <span className="absolute left-[14%] top-[30%] text-sm rotate-12">
+                  💖
+                </span>
+                <span className="absolute right-[14%] top-[34%] text-base">
+                  💕
+                </span>
+                <span className="absolute left-[10%] top-[54%] text-lg -rotate-12">
+                  💗
+                </span>
+                <span className="absolute right-[12%] top-[58%] text-sm rotate-45">
+                  💖
+                </span>
+                <span className="absolute left-[14%] bottom-[20%] text-base">
+                  💕
+                </span>
+                <span className="absolute right-[14%] bottom-[22%] text-lg -rotate-6">
+                  💗
+                </span>
+                <span className="absolute left-[26%] bottom-[12%] text-xs">
+                  💖
+                </span>
+                <span className="absolute right-[26%] bottom-[14%] text-xs">
+                  💕
+                </span>
               </div>
 
-              {/* Handwritten Body */}
+              {/* Handwritten Letter Content Wrapper with Rotations */}
               <div
                 style={{ fontFamily: "'Caveat', cursive" }}
                 className="relative z-10 my-auto flex w-full flex-col gap-2.5 px-2 text-center text-[#3a0607]"
               >
-                <p className="text-lg sm:text-2xl font-bold text-[#580C0D] capitalize">
-                  I Wrote Somthing Special For You {displayName} ❤️,
+                {/* Personal Salutation Greeting with Kiss Emoji */}
+                <p className="text-xl sm:text-2xl font-bold text-[#580C0D] capitalize">
+                  Happiest 18th Birthday meri Kucchu Pucchu Dia 😘,
                 </p>
 
+                {/* Main body of the message, split into rotated blocks for natural handwritten feel */}
                 <p className="inline-block transform -rotate-1 text-[13.5px] sm:text-[15.5px] italic leading-snug">
-                  It's kind of wild to think about how long we've known each
-                  other now. We were just kids when we met, and somehow we've
-                  grown up side by side, figuring it all out as we went. I don't
-                  think either of us knew back then what it would turn into, but
-                  looking at us now, I'm so glad it did.
+                  Mera birthday to kaafi accha gaya ghume khaye masti kiye maza
+                  aaya but tumhara shayad thoda kam ho kyuki tum ghum nhi paogi
+                  jyada. Aage aane wala saal bahut mast hoga naye dost milenge
+                  or naya experience hoga.
                 </p>
 
                 <p className="inline-block transform rotate-1 text-[13.5px] sm:text-[15.5px] italic leading-snug">
-                  You've been there through every version of me—through all the
-                  messy, brilliant, and totally ordinary parts of life—and I
-                  honestly can't imagine doing any of it without you. You've got
-                  this way of making everything feel a bit lighter, a bit
-                  better, just by being you.
+                  Aaj tum finally 18+ ho gayi or ab tumko kaafi sara freedom
+                  milega. Ab tum vote bhi de sakogi. Aane wala saal bahut kuch
+                  sikhayega. Hum ummid krte hain tum hamesha khush raho or aise
+                  hi mere sath pyar se raho.
+                </p>
+
+                <p className="inline-block transform -rotate-1 text-[13.5px] sm:text-[15.5px] italic leading-snug">
+                  Mehnat kro padho likho duniya dekho or maze karo... I hope God
+                  will fulfill all your dreams or agar nhi bhi pura ho paye to
+                  kuch or accha plan hoga god ka. Bas tum khud pe bharosa rakho
+                  or khul ke jiyo.
                 </p>
               </div>
 
@@ -183,7 +210,6 @@ function MessageSection({
                     XXX
                   </p>
                 </div>
-
               </div>
 
               {/* Next Section Icon Button */}
@@ -199,9 +225,7 @@ function MessageSection({
                     📸
                   </span>
 
-                  <span className="relative z-10 drop-shadow-xs">
-                    Memories
-                  </span>
+                  <span className="relative z-10 drop-shadow-xs">Memories</span>
 
                   <span className="relative z-10 text-[#D4A373] transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-[#E6DDD1]">
                     →
