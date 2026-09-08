@@ -10,6 +10,7 @@ import ALBUM2_AUDIO_URL from "../assets/music/Album2.mp3";   // Album 2 song
 export function useSoundManager({ stage, isLetterOpened, selectedAlbum }) {
   const [isMuted, setIsMuted] = useState(false);
   const isMutedRef = useRef(isMuted);
+  const stageRef = useRef(stage);
 
   const countdownAudioRef = useRef(null);
   const birthdayAudioRef = useRef(null);
@@ -20,6 +21,10 @@ export function useSoundManager({ stage, isLetterOpened, selectedAlbum }) {
   useEffect(() => {
     isMutedRef.current = isMuted;
   }, [isMuted]);
+
+  useEffect(() => {
+    stageRef.current = stage;
+  }, [stage]);
 
   // Track initializer helper
   const createAudio = (url, volume = 0.6) => {
@@ -45,11 +50,17 @@ export function useSoundManager({ stage, isLetterOpened, selectedAlbum }) {
       album2AudioRef,
     ];
 
-    // Mobile gesture unlock
+    // Mobile gesture unlock (Screen touch/click par audio unlock and play)
     const unlockAudio = () => {
       allAudios.forEach((ref) => {
         if (ref.current) ref.current.load();
       });
+
+      // Agar user countdown screen par hai to first tap par hi tick audio play ho jaye
+      if (stageRef.current === "countdown" && countdownAudioRef.current && !isMutedRef.current) {
+        countdownAudioRef.current.play().catch(() => {});
+      }
+
       window.removeEventListener("click", unlockAudio);
       window.removeEventListener("touchstart", unlockAudio);
     };
@@ -69,11 +80,10 @@ export function useSoundManager({ stage, isLetterOpened, selectedAlbum }) {
     };
   }, []);
 
-  // Countdown ke aakhri 10s ka audio trigger
+  // Continuous Countdown Tick Play Trigger
   const playCountdownTick = () => {
     const tick = countdownAudioRef.current;
     if (tick && !isMutedRef.current && tick.paused) {
-      tick.currentTime = 0;
       tick.play().catch(() => {});
     }
   };
@@ -101,8 +111,8 @@ export function useSoundManager({ stage, isLetterOpened, selectedAlbum }) {
     };
 
     if (stage === "countdown") {
-      // Countdown audio timer se trigger hota hai, baaki sab pause
-      all.forEach((t) => t && t !== tick && t.pause());
+      // Countdown stage me ticking audio humesha on rahega
+      playOnly(tick);
     } else if (stage === "birthday") {
       const timer = setTimeout(() => {
         playOnly(bday);
@@ -120,7 +130,6 @@ export function useSoundManager({ stage, isLetterOpened, selectedAlbum }) {
       } else if (selectedAlbum === 2) {
         playOnly(alb2);
       } else {
-        // Selection hub screen par Letter song bajega
         playOnly(letter);
       }
     }

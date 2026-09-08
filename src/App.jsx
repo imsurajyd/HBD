@@ -8,6 +8,9 @@ import MemoriesSection from "./components/MemoriesSection";
 // Custom Audio Hook
 import { useSoundManager } from "./hooks/useSoundManager";
 
+// 🎯 Final Birthday Target Date (Midnight 9th September 2026)
+const BIRTHDAY_DATE = new Date("2026-09-09T00:00:00");
+
 // URL Params Reader Helper
 function getUrlParams() {
   if (typeof window === "undefined") return { name: "Meri Jaan", targetDate: null };
@@ -52,8 +55,9 @@ function calculateTimeLeft(targetDate) {
 function App() {
   const { name: recipientName, targetDate: urlTargetDate } = useMemo(() => getUrlParams(), []);
   
+  // Agar URL me ?date=... hai to testing date use hogi, warna default final BIRTHDAY_DATE
   const birthdayDate = useMemo(() => {
-    return urlTargetDate || new Date(Date.now() + 15 * 1000);
+    return urlTargetDate || BIRTHDAY_DATE;
   }, [urlTargetDate]);
 
   const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft(birthdayDate));
@@ -68,21 +72,14 @@ function App() {
     selectedAlbum,
   });
 
-  // Countdown Interval & 10s Trigger
+  // Countdown Interval (Ticking audio continuous jab tak countdown chal raha hai)
   useEffect(() => {
     const timer = setInterval(() => {
       const newTime = calculateTimeLeft(birthdayDate);
       setTimeLeft(newTime);
 
-      const isLastTenSeconds =
-        !newTime.birthdayMode &&
-        newTime.days === 0 &&
-        newTime.hours === 0 &&
-        newTime.minutes === 0 &&
-        newTime.seconds <= 10 &&
-        newTime.seconds > 0;
-
-      if (isLastTenSeconds) {
+      // Jab tak countdown active hai (birthdayMode nahi aaya), ticking sound play hoti rahegi
+      if (!newTime.birthdayMode) {
         playCountdownTick();
       }
 
