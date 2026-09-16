@@ -9,7 +9,7 @@ import MemoriesSection from "./components/MemoriesSection";
 import { useSoundManager } from "./hooks/useSoundManager";
 
 // 🎯 Final Birthday Target Date (Midnight 9th September 2026)
-const BIRTHDAY_DATE = new Date("2026-09-17T00:00:00");
+const BIRTHDAY_DATE = new Date("2026-09-18T00:00:00");
 
 // URL Params Reader Helper
 function getUrlParams() {
